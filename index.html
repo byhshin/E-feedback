@@ -399,16 +399,6 @@
         success: "제출되었습니다.",
         error: "제출 중 오류가 발생했습니다. 다시 시도해 주세요.",
         setupError: "관리자 설정이 필요합니다. SCRIPT_URL을 입력해 주세요.",
-        qrTypeError: "QR manzilida to‘g‘ridan-to‘g‘ri/hamkor toifa qiymati yo‘q. QR kodini qayta tekshiring.",
-        qrTypeError: "عنوان QR لا يحتوي على قيمة فئة مباشر/شريك. يرجى التحقق من رمز QR مرة أخرى.",
-        qrTypeError: "ที่อยู่ QR ไม่มีค่าประเภทพนักงานโดยตรง/บริษัทคู่ค้า โปรดตรวจสอบ QR อีกครั้ง",
-        qrTypeError: "QR 地址中没有直营/合作公司分类值。请重新确认二维码。",
-        qrTypeError: "L’adresse QR ne contient pas de valeur direct/partenaire. Veuillez vérifier à nouveau le QR code.",
-        qrTypeError: "В QR-адресе нет значения категории штатный/партнер. Проверьте QR-код еще раз.",
-        qrTypeError: "QR adresinde doğrudan/partner kategori değeri yok. Lütfen QR kodunu tekrar kontrol edin.",
-        qrTypeError: "Địa chỉ QR không có giá trị phân loại trực tiếp/đối tác. Vui lòng kiểm tra lại mã QR.",
-        qrTypeError: "QR ठेगानामा 직영/협력사 वर्ग मान छैन। कृपया QR कोड फेरि जाँच गर्नुहोस्।",
-        qrTypeError: "The QR address has no direct/partner category value. Please check the QR code again.",
         qrTypeError: "QR 주소에 직영/협력사 구분값이 없습니다. QR 코드를 다시 확인해 주세요.",
         footer: "제출 전 입력 내용을 확인해 주세요.",
         direct: "직영",
@@ -444,7 +434,7 @@
         partnerOption: "Partner Company"
       },
       ne: {
-        title: "तालिम बुझाइ 확인",
+        title: "तालिम बुझाइ जाँच",
         courseLabel: "तालिम कोर्स",
         typeLabel: "वर्ग",
         typeSelectLabel: "वर्ग चयन गर्नुहोस्",
@@ -458,17 +448,17 @@
         no: "होइन",
         commentLabel: "तालिममा थप्न चाहेको विषय वा तालिम सम्बन्धी सुझाव भए लेख्नुहोस्।",
         commentPlaceholder: "आफ्नो सुझाव लेख्नुहोस्। नभए खाली छोड्न सक्नुहुन्छ।",
-        commentHint: "तपाईंको राय मूल भाषा र कोरियन अनुवादसहित 저장됩니다.",
+        commentHint: "तपाईंको राय मूल भाषा र कोरियन अनुवादसहित सुरक्षित गरिन्छ।",
         submit: "पेश गर्नुहोस्",
         submitting: "पेश हुँदैछ...",
         success: "पेश भयो।",
         error: "पेश गर्दा त्रुटि भयो। फेरि प्रयास गर्नुहोस्।",
-        setupError: "व्यवस्थापक सेटिङ आवश्यक छ। SCRIPT_URL 입력해 주세요.",
-        footer: "पेश गर्नु अघि 입력 내용을 확인해 주세요.",
-        direct: "직영",
-        partner: "협력사",
-        directOption: "직영",
-        partnerOption: "협력사"
+        setupError: "व्यवस्थापक सेटिङ आवश्यक छ। कृपया SCRIPT_URL प्रविष्ट गर्नुहोस्।",
+        footer: "पेश गर्नु अघि प्रविष्ट गरिएको विवरण जाँच गर्नुहोस्।",
+        direct: "प्रत्यक्ष कर्मचारी",
+        partner: "सहयोगी कम्पनी",
+        directOption: "प्रत्यक्ष कर्मचारी",
+        partnerOption: "सहयोगी कम्पनी"
       },
       vi: {
         title: "Xác nhận hiểu nội dung đào tạo",
@@ -703,6 +693,59 @@
       }
     };
 
+
+
+    const ORG_LABELS = {
+      "HSE팀": {
+        ko: "HSE팀", en: "HSE Team", ne: "HSE टोली", vi: "Đội HSE", tr: "HSE Ekibi", ru: "Команда HSE", fr: "Équipe HSE", zh: "HSE组", th: "ทีม HSE", ar: "فريق HSE", uz: "HSE jamoasi"
+      },
+      "품질팀": {
+        ko: "품질팀", en: "Quality Team", ne: "गुणस्तर टोली", vi: "Đội chất lượng", tr: "Kalite Ekibi", ru: "Отдел качества", fr: "Équipe qualité", zh: "质量组", th: "ทีมคุณภาพ", ar: "فريق الجودة", uz: "Sifat jamoasi"
+      },
+      "공무팀": {
+        ko: "공무팀", en: "Maintenance Team", ne: "मर्मत टोली", vi: "Đội bảo trì", tr: "Bakım Ekibi", ru: "Ремонтная служба", fr: "Équipe maintenance", zh: "维修组", th: "ทีมซ่อมบำรุง", ar: "فريق الصيانة", uz: "Ta’mirlash jamoasi"
+      },
+      "의장팀": {
+        ko: "의장팀", en: "Outfitting Team", ne: "आउटफिटिङ टोली", vi: "Đội lắp đặt thiết bị", tr: "Donatım Ekibi", ru: "Монтажная команда", fr: "Équipe d’armement", zh: "舾装组", th: "ทีมติดตั้งอุปกรณ์", ar: "فريق التجهيز", uz: "Jihozlash jamoasi"
+      },
+      "탑재팀": {
+        ko: "탑재팀", en: "Erection Team", ne: "स्थापना टोली", vi: "Đội lắp dựng", tr: "Montaj Ekibi", ru: "Команда монтажа", fr: "Équipe montage", zh: "搭载组", th: "ทีมประกอบติดตั้ง", ar: "فريق التركيب", uz: "O‘rnatish jamoasi"
+      },
+      "물류팀": {
+        ko: "물류팀", en: "Logistics Team", ne: "लजिस्टिक्स टोली", vi: "Đội logistics", tr: "Lojistik Ekibi", ru: "Отдел логистики", fr: "Équipe logistique", zh: "物流组", th: "ทีมโลจิสติกส์", ar: "فريق اللوجستيات", uz: "Logistika jamoasi"
+      },
+      "도장팀": {
+        ko: "도장팀", en: "Painting Team", ne: "पेन्टिङ टोली", vi: "Đội sơn", tr: "Boya Ekibi", ru: "Малярная команда", fr: "Équipe peinture", zh: "涂装组", th: "ทีมสี", ar: "فريق الطلاء", uz: "Bo‘yash jamoasi"
+      },
+      "생산운영팀": {
+        ko: "생산운영팀", en: "Production Operations Team", ne: "उत्पादन सञ्चालन टोली", vi: "Đội vận hành sản xuất", tr: "Üretim Operasyon Ekibi", ru: "Команда производственных операций", fr: "Équipe opérations de production", zh: "生产运营组", th: "ทีมปฏิบัติการผลิต", ar: "فريق تشغيل الإنتاج", uz: "Ishlab chiqarish operatsiyalari jamoasi"
+      },
+      "관리팀": {
+        ko: "관리팀", en: "Administration Team", ne: "व्यवस्थापन टोली", vi: "Đội quản lý", tr: "İdari İşler Ekibi", ru: "Административная команда", fr: "Équipe administration", zh: "管理组", th: "ทีมบริหาร", ar: "فريق الإدارة", uz: "Ma’muriyat jamoasi"
+      },
+      "재무팀": {
+        ko: "재무팀", en: "Finance Team", ne: "वित्त टोली", vi: "Đội tài chính", tr: "Finans Ekibi", ru: "Финансовый отдел", fr: "Équipe finance", zh: "财务组", th: "ทีมการเงิน", ar: "فريق المالية", uz: "Moliya jamoasi"
+      },
+      "자재팀": {
+        ko: "자재팀", en: "Materials Team", ne: "सामग्री टोली", vi: "Đội vật tư", tr: "Malzeme Ekibi", ru: "Отдел материалов", fr: "Équipe matériel", zh: "材料组", th: "ทีมวัสดุ", ar: "فريق المواد", uz: "Materiallar jamoasi"
+      },
+      "조립팀": {
+        ko: "조립팀", en: "Assembly Team", ne: "असेंबली टोली", vi: "Đội lắp ráp", tr: "Montaj/İmalat Ekibi", ru: "Сборочная команда", fr: "Équipe assemblage", zh: "组装组", th: "ทีมประกอบ", ar: "فريق التجميع", uz: "Yig‘ish jamoasi"
+      },
+      "해양": { ko: "해양", en: "Haeyang", ne: "Haeyang", vi: "Haeyang", tr: "Haeyang", ru: "Haeyang", fr: "Haeyang", zh: "Haeyang", th: "Haeyang", ar: "Haeyang", uz: "Haeyang" },
+      "연승": { ko: "연승", en: "Yeonseung", ne: "Yeonseung", vi: "Yeonseung", tr: "Yeonseung", ru: "Yeonseung", fr: "Yeonseung", zh: "Yeonseung", th: "Yeonseung", ar: "Yeonseung", uz: "Yeonseung" },
+      "우솔": { ko: "우솔", en: "Usol", ne: "Usol", vi: "Usol", tr: "Usol", ru: "Usol", fr: "Usol", zh: "Usol", th: "Usol", ar: "Usol", uz: "Usol" },
+      "경한": { ko: "경한", en: "Gyeonghan", ne: "Gyeonghan", vi: "Gyeonghan", tr: "Gyeonghan", ru: "Gyeonghan", fr: "Gyeonghan", zh: "Gyeonghan", th: "Gyeonghan", ar: "Gyeonghan", uz: "Gyeonghan" },
+      "이륙": { ko: "이륙", en: "Iryuk", ne: "Iryuk", vi: "Iryuk", tr: "Iryuk", ru: "Iryuk", fr: "Iryuk", zh: "Iryuk", th: "Iryuk", ar: "Iryuk", uz: "Iryuk" },
+      "성훈": { ko: "성훈", en: "Seonghun", ne: "Seonghun", vi: "Seonghun", tr: "Seonghun", ru: "Seonghun", fr: "Seonghun", zh: "Seonghun", th: "Seonghun", ar: "Seonghun", uz: "Seonghun" },
+      "명우": { ko: "명우", en: "Myeongwoo", ne: "Myeongwoo", vi: "Myeongwoo", tr: "Myeongwoo", ru: "Myeongwoo", fr: "Myeongwoo", zh: "Myeongwoo", th: "Myeongwoo", ar: "Myeongwoo", uz: "Myeongwoo" },
+      "유영": { ko: "유영", en: "Yuyeong", ne: "Yuyeong", vi: "Yuyeong", tr: "Yuyeong", ru: "Yuyeong", fr: "Yuyeong", zh: "Yuyeong", th: "Yuyeong", ar: "Yuyeong", uz: "Yuyeong" },
+      "일성": { ko: "일성", en: "Ilsung", ne: "Ilsung", vi: "Ilsung", tr: "Ilsung", ru: "Ilsung", fr: "Ilsung", zh: "Ilsung", th: "Ilsung", ar: "Ilsung", uz: "Ilsung" },
+      "백영": { ko: "백영", en: "Baekyoung", ne: "Baekyoung", vi: "Baekyoung", tr: "Baekyoung", ru: "Baekyoung", fr: "Baekyoung", zh: "Baekyoung", th: "Baekyoung", ar: "Baekyoung", uz: "Baekyoung" },
+      "성주": { ko: "성주", en: "Seongju", ne: "Seongju", vi: "Seongju", tr: "Seongju", ru: "Seongju", fr: "Seongju", zh: "Seongju", th: "Seongju", ar: "Seongju", uz: "Seongju" },
+      "해봉": { ko: "해봉", en: "Haebong", ne: "Haebong", vi: "Haebong", tr: "Haebong", ru: "Haebong", fr: "Haebong", zh: "Haebong", th: "Haebong", ar: "Haebong", uz: "Haebong" }
+    };
+
     const params = new URLSearchParams(location.search);
     let currentLang = "ko";
     let rawCourse = decodeParam(params.get("course")) || "교육과정 미지정";
@@ -749,6 +792,13 @@
       if (typeValue === "협력사") return getT("partner");
       return "-";
     }
+
+    function getOrgLabel(orgValue) {
+      const pack = ORG_LABELS[orgValue];
+      if (!pack) return orgValue || "";
+      return pack[currentLang] || pack.en || pack.ko || orgValue;
+    }
+
     function fillTypeSelect() { /* 구분은 QR 주소값으로만 처리 */ }
 
     function fillAffiliation() {
@@ -759,7 +809,7 @@
       placeholder.disabled = true;
       placeholder.selected = true;
       el.affiliation.add(placeholder);
-      list.forEach(item => el.affiliation.add(new Option(item, item)));
+      list.forEach(item => el.affiliation.add(new Option(getOrgLabel(item), item)));
       if (list.includes(previous)) el.affiliation.value = previous;
     }
 
@@ -841,7 +891,8 @@
         languageCode: meta.sheetCode,
         languageName: meta.name,
         name: el.name.value.trim(),
-        affiliation: el.affiliation.value,
+        affiliation: getOrgLabel(el.affiliation.value),
+        affiliationBase: el.affiliation.value,
         understoodCode: understoodCode,
         understoodText: selectedUnderstandText(understoodCode),
         comment: el.comment.value.trim(),
