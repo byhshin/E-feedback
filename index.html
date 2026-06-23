@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>교육 이해도 확인</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #687386;
+      --line: #dfe6f1;
+      --primary: #1769e0;
+      --primary-dark: #0f55b8;
+      --danger: #d83434;
+      --ok: #0b8f55;
+      --shadow: 0 10px 30px rgba(27, 47, 80, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 42%, #eef2f7 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 14px 14px 36px;
+    }
+
+    .lang-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+      margin: 6px 0 12px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(224, 231, 242, 0.95);
+      box-shadow: 0 4px 16px rgba(25, 43, 70, 0.07);
+    }
+
+    .flag {
+      width: 100%;
+      height: 31px;
+      object-fit: cover;
+      border-radius: 7px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.14);
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .flag:active { transform: scale(0.96); }
+    .flag.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.16);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(222, 230, 242, 0.9);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 22px 20px 16px;
+      background: linear-gradient(135deg, #155fd0 0%, #1c7af4 100%);
+      color: #fff;
+    }
+
+    .header h1 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 11px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+    }
+
+    .meta-label { opacity: 0.84; white-space: nowrap; }
+    .meta-value { font-weight: 700; text-align: right; }
+
+    form { padding: 20px; }
+
+    .field { margin-bottom: 18px; }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 2px;
+    }
+
+    .field-grid .field { margin-bottom: 18px; }
+
+    .question-field {
+      margin-top: 2px;
+      padding-top: 2px;
+    }
+
+    label, .label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 13px;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.12);
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .radio-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .radio-card input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-card:has(input:checked) {
+      border-color: var(--primary);
+      background: #edf5ff;
+      color: var(--primary-dark);
+      box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.1);
+    }
+
+    .actions { margin-top: 8px; }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 16px 14px;
+      font-size: 17px;
+      font-weight: 900;
+      color: #fff;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(23, 105, 224, 0.25);
+    }
+
+    button:disabled {
+      opacity: 0.62;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .message.ok {
+      display: block;
+      color: #075c38;
+      background: #e9f8f0;
+      border: 1px solid #bde9d1;
+    }
+
+    .message.err {
+      display: block;
+      color: #9d1b1b;
+      background: #fff0f0;
+      border: 1px solid #f3c6c6;
+    }
+
+    .footer-note {
+      padding: 13px 20px 20px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    [dir="rtl"] body, [dir="rtl"] input, [dir="rtl"] select, [dir="rtl"] textarea, [dir="rtl"] button {
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    @media (max-width: 360px) {
+      .lang-bar { grid-template-columns: repeat(5, 1fr); }
+      .header h1 { font-size: 22px; }
+      .field-grid { grid-template-columns: 1fr; gap: 0; }
+      form { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="lang-bar" aria-label="language selection">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/KO.png" onclick="changeLang('ko')" class="flag" data-lang="ko" alt="KO">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/EN.png" onclick="changeLang('en')" class="flag" data-lang="en" alt="EN">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/NE.png" onclick="changeLang('ne')" class="flag" data-lang="ne" alt="NE">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/VI.png" onclick="changeLang('vi')" class="flag" data-lang="vi" alt="VI">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/TR.png" onclick="changeLang('tr')" class="flag" data-lang="tr" alt="TR">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/RU.png" onclick="changeLang('ru')" class="flag" data-lang="ru" alt="RU">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/FR.png" onclick="changeLang('fr')" class="flag" data-lang="fr" alt="FR">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/ZH.png" onclick="changeLang('zh')" class="flag" data-lang="zh" alt="ZH">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/TH.png" onclick="changeLang('th')" class="flag" data-lang="th" alt="TH">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/AR.png" onclick="changeLang('ar')" class="flag" data-lang="ar" alt="AR">
+      <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/flag/UZ.png" onclick="changeLang('uz')" class="flag" data-lang="uz" alt="UZ">
+    </div>
+
+    <main class="card">
+      <section class="header">
+        <h1 data-i18n="title">교육 이해도 확인</h1>
+        <div class="meta">
+          <div class="meta-row">
+            <span class="meta-label" data-i18n="courseLabel">교육과정</span>
+            <span class="meta-value" id="courseText">-</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label" data-i18n="typeLabel">구분</span>
+            <span class="meta-value" id="typeText">-</span>
+          </div>
+        </div>
+      </section>
+
+      <form id="feedbackForm" autocomplete="off">
+        <div class="field-grid">
+          <div class="field">
+            <label for="name" class="required" data-i18n="nameLabel">이름</label>
+            <input id="name" name="name" type="text" data-i18n-placeholder="namePlaceholder" placeholder="이름을 입력하세요" required />
+          </div>
+
+          <div class="field">
+            <label for="affiliation" class="required" data-i18n="affiliationLabel">소속</label>
+            <select id="affiliation" name="affiliation" required></select>
+          </div>
+        </div>
+
+        <div class="field question-field">
+          <div class="label required" data-i18n="understandLabel">교육을 이해했습니까?</div>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input type="radio" name="understood" value="Y" required />
+              <span data-i18n="yes">예</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="understood" value="N" required />
+              <span data-i18n="no">아니오</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="comment" data-i18n="commentLabel">교육에 추가했으면 하는 내용이나, 교육에 대한 건의사항이 있으시면 적어주세요.</label>
+          <textarea id="comment" name="comment" data-i18n-placeholder="commentPlaceholder" placeholder="내용을 입력하세요. 없으면 비워두셔도 됩니다."></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="submitBtn" data-i18n="submit">제출하기</button>
+        </div>
+        <div id="message" class="message"></div>
+      </form>
+
+      <div class="footer-note" data-i18n="footer">제출 전 입력 내용을 확인해 주세요.</div>
+    </main>
+  </div>
+
+  <script>
+    /*****************************************************************
+     * 1) Google Apps Script 웹앱 URL을 아래에 붙여넣으세요.
+     *****************************************************************/
+    const SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    /*****************************************************************
+     * 2) 소속 목록
+     *****************************************************************/
+    const DIRECT_ORGS = [
+      "HSE팀", "품질팀", "공무팀", "의장팀", "탑재팀", "물류팀",
+      "도장팀", "생산운영팀", "관리팀", "재무팀", "자재팀", "조립팀"
+    ];
+
+    const PARTNER_ORGS = [
+      "해양", "연승", "우솔", "경한", "이륙", "성훈",
+      "명우", "유영", "일성", "백영", "성주", "해봉"
+    ];
+
+    /*****************************************************************
+     * 3) 언어별 문구
+     *****************************************************************/
+    const LANG_META = {
+      ko: { sheetCode: "KR", name: "한국어", dir: "ltr" },
+      en: { sheetCode: "EN", name: "English", dir: "ltr" },
+      ne: { sheetCode: "NE", name: "नेपाली", dir: "ltr" },
+      vi: { sheetCode: "VI", name: "Tiếng Việt", dir: "ltr" },
+      tr: { sheetCode: "TR", name: "Türkçe", dir: "ltr" },
+      ru: { sheetCode: "RU", name: "Русский", dir: "ltr" },
+      fr: { sheetCode: "FR", name: "Français", dir: "ltr" },
+      zh: { sheetCode: "ZH", name: "中文", dir: "ltr" },
+      th: { sheetCode: "TH", name: "ไทย", dir: "ltr" },
+      ar: { sheetCode: "AR", name: "العربية", dir: "rtl" },
+      uz: { sheetCode: "UZ", name: "O‘zbek", dir: "ltr" }
+    };
+
+    const I18N = {
+      ko: {
+        title: "교육 이해도 확인",
+        courseLabel: "교육과정",
+        typeLabel: "구분",
+        typeSelectLabel: "구분 선택",
+        typeHint: "QR 주소에 구분값이 없을 때만 표시됩니다.",
+        nameLabel: "이름",
+        namePlaceholder: "이름을 입력하세요",
+        affiliationLabel: "소속",
+        affiliationPlaceholder: "소속을 선택하세요",
+        understandLabel: "교육을 이해했습니까?",
+        yes: "예",
+        no: "아니오",
+        commentLabel: "교육에 추가했으면 하는 내용이나, 교육에 대한 건의사항이 있으시면 적어주세요.",
+        commentPlaceholder: "내용을 입력하세요. 없으면 비워두셔도 됩니다.",
+        commentHint: "입력한 내용은 원문과 한국어 번역본으로 저장됩니다.",
+        submit: "제출",
+        submitting: "제출 중...",
+        success: "제출되었습니다.",
+        error: "제출 중 오류가 발생했습니다. 다시 시도해 주세요.",
+        setupError: "관리자 설정이 필요합니다. SCRIPT_URL을 입력해 주세요.",
+        qrTypeError: "QR manzilida to‘g‘ridan-to‘g‘ri/hamkor toifa qiymati yo‘q. QR kodini qayta tekshiring.",
+        qrTypeError: "عنوان QR لا يحتوي على قيمة فئة مباشر/شريك. يرجى التحقق من رمز QR مرة أخرى.",
+        qrTypeError: "ที่อยู่ QR ไม่มีค่าประเภทพนักงานโดยตรง/บริษัทคู่ค้า โปรดตรวจสอบ QR อีกครั้ง",
+        qrTypeError: "QR 地址中没有直营/合作公司分类值。请重新确认二维码。",
+        qrTypeError: "L’adresse QR ne contient pas de valeur direct/partenaire. Veuillez vérifier à nouveau le QR code.",
+        qrTypeError: "В QR-адресе нет значения категории штатный/партнер. Проверьте QR-код еще раз.",
+        qrTypeError: "QR adresinde doğrudan/partner kategori değeri yok. Lütfen QR kodunu tekrar kontrol edin.",
+        qrTypeError: "Địa chỉ QR không có giá trị phân loại trực tiếp/đối tác. Vui lòng kiểm tra lại mã QR.",
+        qrTypeError: "QR ठेगानामा 직영/협력사 वर्ग मान छैन। कृपया QR कोड फेरि जाँच गर्नुहोस्।",
+        qrTypeError: "The QR address has no direct/partner category value. Please check the QR code again.",
+        qrTypeError: "QR 주소에 직영/협력사 구분값이 없습니다. QR 코드를 다시 확인해 주세요.",
+        footer: "제출 전 입력 내용을 확인해 주세요.",
+        direct: "직영",
+        partner: "협력사",
+        directOption: "직영",
+        partnerOption: "협력사"
+      },
+      en: {
+        title: "Training Understanding Check",
+        courseLabel: "Training Course",
+        typeLabel: "Category",
+        typeSelectLabel: "Select Category",
+        typeHint: "This appears only when the QR address has no category value.",
+        nameLabel: "Name",
+        namePlaceholder: "Enter your name",
+        affiliationLabel: "Department / Company",
+        affiliationPlaceholder: "Select your department or company",
+        understandLabel: "Did you understand the training?",
+        yes: "Yes",
+        no: "No",
+        commentLabel: "If there is any content you would like to add or any suggestions about the training, please write them below.",
+        commentPlaceholder: "Enter your comments. You may leave this blank if none.",
+        commentHint: "Your comment will be saved as original text and Korean translation.",
+        submit: "Submit",
+        submitting: "Submitting...",
+        success: "Submitted successfully.",
+        error: "An error occurred while submitting. Please try again.",
+        setupError: "Administrator setup is required. Please enter SCRIPT_URL.",
+        footer: "Please check your entries before submitting.",
+        direct: "Direct Employee",
+        partner: "Partner Company",
+        directOption: "Direct Employee",
+        partnerOption: "Partner Company"
+      },
+      ne: {
+        title: "तालिम बुझाइ 확인",
+        courseLabel: "तालिम कोर्स",
+        typeLabel: "वर्ग",
+        typeSelectLabel: "वर्ग चयन गर्नुहोस्",
+        typeHint: "QR ठेगानामा वर्ग मान नभएको अवस्थामा मात्र देखिन्छ।",
+        nameLabel: "नाम",
+        namePlaceholder: "आफ्नो नाम लेख्नुहोस्",
+        affiliationLabel: "विभाग / कम्पनी",
+        affiliationPlaceholder: "विभाग वा कम्पनी चयन गर्नुहोस्",
+        understandLabel: "के तपाईंले तालिम बुझ्नुभयो?",
+        yes: "हो",
+        no: "होइन",
+        commentLabel: "तालिममा थप्न चाहेको विषय वा तालिम सम्बन्धी सुझाव भए लेख्नुहोस्।",
+        commentPlaceholder: "आफ्नो सुझाव लेख्नुहोस्। नभए खाली छोड्न सक्नुहुन्छ।",
+        commentHint: "तपाईंको राय मूल भाषा र कोरियन अनुवादसहित 저장됩니다.",
+        submit: "पेश गर्नुहोस्",
+        submitting: "पेश हुँदैछ...",
+        success: "पेश भयो।",
+        error: "पेश गर्दा त्रुटि भयो। फेरि प्रयास गर्नुहोस्।",
+        setupError: "व्यवस्थापक सेटिङ आवश्यक छ। SCRIPT_URL 입력해 주세요.",
+        footer: "पेश गर्नु अघि 입력 내용을 확인해 주세요.",
+        direct: "직영",
+        partner: "협력사",
+        directOption: "직영",
+        partnerOption: "협력사"
+      },
+      vi: {
+        title: "Xác nhận hiểu nội dung đào tạo",
+        courseLabel: "Khóa đào tạo",
+        typeLabel: "Phân loại",
+        typeSelectLabel: "Chọn phân loại",
+        typeHint: "Chỉ hiển thị khi địa chỉ QR không có giá trị phân loại.",
+        nameLabel: "Họ và tên",
+        namePlaceholder: "Nhập họ và tên",
+        affiliationLabel: "Bộ phận / Công ty",
+        affiliationPlaceholder: "Chọn bộ phận hoặc công ty",
+        understandLabel: "Bạn đã hiểu nội dung đào tạo chưa?",
+        yes: "Có",
+        no: "Không",
+        commentLabel: "Nếu có nội dung muốn bổ sung hoặc góp ý về chương trình đào tạo, vui lòng ghi vào bên dưới.",
+        commentPlaceholder: "Nhập ý kiến. Nếu không có, có thể để trống.",
+        commentHint: "Nội dung sẽ được lưu bằng nguyên văn và bản dịch tiếng Hàn.",
+        submit: "Gửi",
+        submitting: "Đang gửi...",
+        success: "Đã gửi.",
+        error: "Đã xảy ra lỗi khi gửi. Vui lòng thử lại.",
+        setupError: "Cần thiết lập quản trị viên. Vui lòng nhập SCRIPT_URL.",
+        footer: "Vui lòng kiểm tra nội dung trước khi gửi.",
+        direct: "Nhân viên trực tiếp",
+        partner: "Công ty đối tác",
+        directOption: "Nhân viên trực tiếp",
+        partnerOption: "Công ty đối tác"
+      },
+      tr: {
+        title: "Eğitim Anlama Kontrolü",
+        courseLabel: "Eğitim Kursu",
+        typeLabel: "Kategori",
+        typeSelectLabel: "Kategori Seçin",
+        typeHint: "Yalnızca QR adresinde kategori değeri yoksa gösterilir.",
+        nameLabel: "Ad Soyad",
+        namePlaceholder: "Adınızı girin",
+        affiliationLabel: "Bölüm / Şirket",
+        affiliationPlaceholder: "Bölüm veya şirket seçin",
+        understandLabel: "Eğitimi anladınız mı?",
+        yes: "Evet",
+        no: "Hayır",
+        commentLabel: "Eğitime eklenmesini istediğiniz konu veya eğitimle ilgili öneriniz varsa yazın.",
+        commentPlaceholder: "Görüşlerinizi yazın. Yoksa boş bırakabilirsiniz.",
+        commentHint: "Görüşünüz orijinal metin ve Korece çeviri olarak kaydedilir.",
+        submit: "Gönder",
+        submitting: "Gönderiliyor...",
+        success: "Gönderildi.",
+        error: "Gönderirken hata oluştu. Lütfen tekrar deneyin.",
+        setupError: "Yönetici ayarı gereklidir. Lütfen SCRIPT_URL girin.",
+        footer: "Göndermeden önce bilgileri kontrol edin.",
+        direct: "Doğrudan Çalışan",
+        partner: "Alt Yüklenici",
+        directOption: "Doğrudan Çalışan",
+        partnerOption: "Alt Yüklenici"
+      },
+      ru: {
+        title: "Проверка понимания обучения",
+        courseLabel: "Курс обучения",
+        typeLabel: "Категория",
+        typeSelectLabel: "Выберите категорию",
+        typeHint: "Отображается только если в QR-адресе нет значения категории.",
+        nameLabel: "Имя",
+        namePlaceholder: "Введите имя",
+        affiliationLabel: "Отдел / Компания",
+        affiliationPlaceholder: "Выберите отдел или компанию",
+        understandLabel: "Вы поняли содержание обучения?",
+        yes: "Да",
+        no: "Нет",
+        commentLabel: "Если есть темы, которые вы хотите добавить, или предложения по обучению, напишите ниже.",
+        commentPlaceholder: "Введите комментарий. Если нет, можно оставить пустым.",
+        commentHint: "Комментарий будет сохранен как оригинал и перевод на корейский.",
+        submit: "Отправить",
+        submitting: "Отправка...",
+        success: "Отправлено.",
+        error: "Произошла ошибка при отправке. Попробуйте еще раз.",
+        setupError: "Требуется настройка администратора. Введите SCRIPT_URL.",
+        footer: "Проверьте данные перед отправкой.",
+        direct: "Штатный сотрудник",
+        partner: "Партнерская компания",
+        directOption: "Штатный сотрудник",
+        partnerOption: "Партнерская компания"
+      },
+      fr: {
+        title: "Vérification de la compréhension",
+        courseLabel: "Formation",
+        typeLabel: "Catégorie",
+        typeSelectLabel: "Sélectionner la catégorie",
+        typeHint: "Affiché uniquement si l’adresse QR n’a pas de valeur de catégorie.",
+        nameLabel: "Nom",
+        namePlaceholder: "Saisissez votre nom",
+        affiliationLabel: "Service / Société",
+        affiliationPlaceholder: "Sélectionnez le service ou la société",
+        understandLabel: "Avez-vous compris la formation ?",
+        yes: "Oui",
+        no: "Non",
+        commentLabel: "Si vous souhaitez ajouter du contenu ou faire une suggestion sur la formation, écrivez-la ci-dessous.",
+        commentPlaceholder: "Saisissez vos commentaires. Vous pouvez laisser vide s’il n’y en a pas.",
+        commentHint: "Votre commentaire sera enregistré en original et en traduction coréenne.",
+        submit: "Envoyer",
+        submitting: "Envoi...",
+        success: "Envoyé.",
+        error: "Une erreur est survenue lors de l’envoi. Veuillez réessayer.",
+        setupError: "Configuration administrateur requise. Veuillez saisir SCRIPT_URL.",
+        footer: "Veuillez vérifier vos informations avant l’envoi.",
+        direct: "Employé direct",
+        partner: "Entreprise partenaire",
+        directOption: "Employé direct",
+        partnerOption: "Entreprise partenaire"
+      },
+      zh: {
+        title: "培训理解确认",
+        courseLabel: "培训课程",
+        typeLabel: "分类",
+        typeSelectLabel: "选择分类",
+        typeHint: "仅在 QR 地址没有分类值时显示。",
+        nameLabel: "姓名",
+        namePlaceholder: "请输入姓名",
+        affiliationLabel: "部门 / 公司",
+        affiliationPlaceholder: "请选择部门或公司",
+        understandLabel: "您理解培训内容了吗？",
+        yes: "是",
+        no: "否",
+        commentLabel: "如有希望增加的内容或对培训的建议，请填写。",
+        commentPlaceholder: "请输入内容。没有可留空。",
+        commentHint: "意见将保存为原文和韩文翻译。",
+        submit: "提交",
+        submitting: "提交中...",
+        success: "已提交。",
+        error: "提交时发生错误。请重试。",
+        setupError: "需要管理员设置。请输入 SCRIPT_URL。",
+        footer: "提交前请确认填写内容。",
+        direct: "直营员工",
+        partner: "合作公司",
+        directOption: "直营员工",
+        partnerOption: "合作公司"
+      },
+      th: {
+        title: "ตรวจสอบความเข้าใจการอบรม",
+        courseLabel: "หลักสูตรอบรม",
+        typeLabel: "ประเภท",
+        typeSelectLabel: "เลือกประเภท",
+        typeHint: "จะแสดงเมื่อที่อยู่ QR ไม่มีค่าประเภทเท่านั้น",
+        nameLabel: "ชื่อ",
+        namePlaceholder: "กรอกชื่อของคุณ",
+        affiliationLabel: "แผนก / บริษัท",
+        affiliationPlaceholder: "เลือกแผนกหรือบริษัท",
+        understandLabel: "คุณเข้าใจการอบรมหรือไม่?",
+        yes: "ใช่",
+        no: "ไม่ใช่",
+        commentLabel: "หากมีเนื้อหาที่ต้องการเพิ่มเติมหรือข้อเสนอแนะเกี่ยวกับการอบรม โปรดเขียนด้านล่าง",
+        commentPlaceholder: "กรอกข้อความ หากไม่มีสามารถเว้นว่างได้",
+        commentHint: "ความคิดเห็นจะถูกบันทึกเป็นข้อความต้นฉบับและคำแปลภาษาเกาหลี",
+        submit: "ส่ง",
+        submitting: "กำลังส่ง...",
+        success: "ส่งแล้ว",
+        error: "เกิดข้อผิดพลาดในการส่ง กรุณาลองอีกครั้ง",
+        setupError: "ต้องตั้งค่าผู้ดูแลระบบ กรุณาใส่ SCRIPT_URL",
+        footer: "โปรดตรวจสอบข้อมูลก่อนส่ง",
+        direct: "พนักงานโดยตรง",
+        partner: "บริษัทคู่ค้า",
+        directOption: "พนักงานโดยตรง",
+        partnerOption: "บริษัทคู่ค้า"
+      },
+      ar: {
+        title: "التحقق من فهم التدريب",
+        courseLabel: "دورة التدريب",
+        typeLabel: "الفئة",
+        typeSelectLabel: "اختر الفئة",
+        typeHint: "يظهر فقط عندما لا يحتوي عنوان QR على قيمة الفئة.",
+        nameLabel: "الاسم",
+        namePlaceholder: "أدخل اسمك",
+        affiliationLabel: "القسم / الشركة",
+        affiliationPlaceholder: "اختر القسم أو الشركة",
+        understandLabel: "هل فهمت محتوى التدريب؟",
+        yes: "نعم",
+        no: "لا",
+        commentLabel: "إذا كان لديك محتوى تريد إضافته أو اقتراحات حول التدريب، فاكتبها أدناه.",
+        commentPlaceholder: "اكتب ملاحظاتك. يمكنك تركه فارغًا إذا لم يوجد.",
+        commentHint: "سيتم حفظ الملاحظة كنص أصلي وترجمة كورية.",
+        submit: "إرسال",
+        submitting: "جارٍ الإرسال...",
+        success: "تم الإرسال.",
+        error: "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.",
+        setupError: "يلزم إعداد المسؤول. الرجاء إدخال SCRIPT_URL.",
+        footer: "يرجى التحقق من البيانات قبل الإرسال.",
+        direct: "موظف مباشر",
+        partner: "شركة شريكة",
+        directOption: "موظف مباشر",
+        partnerOption: "شركة شريكة"
+      },
+      uz: {
+        title: "O‘quvni tushunganlikni tasdiqlash",
+        courseLabel: "O‘quv kursi",
+        typeLabel: "Toifa",
+        typeSelectLabel: "Toifani tanlang",
+        typeHint: "QR manzilida toifa qiymati bo‘lmaganda ko‘rsatiladi.",
+        nameLabel: "Ism-familiya",
+        namePlaceholder: "Ismingizni kiriting",
+        affiliationLabel: "Bo‘lim / Kompaniya",
+        affiliationPlaceholder: "Bo‘lim yoki kompaniyani tanlang",
+        understandLabel: "O‘quv mazmunini tushundingizmi?",
+        yes: "Ha",
+        no: "Yo‘q",
+        commentLabel: "O‘quvga qo‘shilishini istagan mavzu yoki o‘quv bo‘yicha takliflaringiz bo‘lsa, yozing.",
+        commentPlaceholder: "Izohlaringizni yozing. Bo‘lmasa bo‘sh qoldiring.",
+        commentHint: "Fikr asl matn va koreyscha tarjima sifatida saqlanadi.",
+        submit: "Yuborish",
+        submitting: "Yuborilmoqda...",
+        success: "Yuborildi.",
+        error: "Yuborishda xatolik yuz berdi. Qayta urinib ko‘ring.",
+        setupError: "Administrator sozlamasi kerak. SCRIPT_URL kiriting.",
+        footer: "Yuborishdan oldin ma’lumotlarni tekshiring.",
+        direct: "To‘g‘ridan-to‘g‘ri xodim",
+        partner: "Hamkor kompaniya",
+        directOption: "To‘g‘ridan-to‘g‘ri xodim",
+        partnerOption: "Hamkor kompaniya"
+      }
+    };
+
+    const COURSE_LABELS = {
+      "신규교육": {
+        ko: "신규교육", en: "New Employee Training", ne: "नयाँ कर्मचारी तालिम", vi: "Đào tạo nhân viên mới", tr: "Yeni Çalışan Eğitimi", ru: "Обучение новых работников", fr: "Formation des nouveaux employés", zh: "新员工培训", th: "การอบรมพนักงานใหม่", ar: "تدريب الموظفين الجدد", uz: "Yangi xodimlar o‘quvi"
+      },
+      "특별교육": {
+        ko: "특별교육", en: "Special Safety Training", ne: "विशेष सुरक्षा तालिम", vi: "Đào tạo an toàn đặc biệt", tr: "Özel Güvenlik Eğitimi", ru: "Специальное обучение по безопасности", fr: "Formation spéciale à la sécurité", zh: "特别安全培训", th: "การอบรมความปลอดภัยพิเศษ", ar: "تدريب السلامة الخاص", uz: "Maxsus xavfsizlik o‘quvi"
+      },
+      "정기교육": {
+        ko: "정기교육", en: "Regular Safety Training", ne: "नियमित सुरक्षा तालिम", vi: "Đào tạo an toàn định kỳ", tr: "Periyodik Güvenlik Eğitimi", ru: "Периодическое обучение по безопасности", fr: "Formation régulière à la sécurité", zh: "定期安全培训", th: "การอบรมความปลอดภัยประจำ", ar: "تدريب السلامة الدوري", uz: "Davriy xavfsizlik o‘quvi"
+      },
+      "관리감독자교육": {
+        ko: "관리감독자교육", en: "Supervisor Training", ne: "पर्यवेक्षक तालिम", vi: "Đào tạo người giám sát", tr: "Yönetici / Gözetmen Eğitimi", ru: "Обучение руководителей", fr: "Formation des superviseurs", zh: "管理监督者培训", th: "การอบรมหัวหน้างาน", ar: "تدريب المشرفين", uz: "Nazoratchilar o‘quvi"
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    let currentLang = "ko";
+    let rawCourse = decodeParam(params.get("course")) || "교육과정 미지정";
+    let workerType = normalizeType(decodeParam(params.get("type")) || "");
+
+    const el = {
+      form: document.getElementById("feedbackForm"),
+      name: document.getElementById("name"),
+      affiliation: document.getElementById("affiliation"),
+      workerType: document.getElementById("workerType"),
+      typeSelectField: document.getElementById("typeSelectField"),
+      courseText: document.getElementById("courseText"),
+      typeText: document.getElementById("typeText"),
+      message: document.getElementById("message"),
+      submitBtn: document.getElementById("submitBtn"),
+      comment: document.getElementById("comment")
+    };
+
+    function decodeParam(value) {
+      if (!value) return "";
+      try { return decodeURIComponent(value).trim(); }
+      catch (e) { return value.trim(); }
+    }
+
+    function normalizeType(value) {
+      const v = String(value || "").toLowerCase().trim();
+      if (["직영", "direct", "employee", "internal", "inhouse", "owner"].includes(v)) return "직영";
+      if (["협력사", "partner", "vendor", "sub", "contractor", "company"].includes(v)) return "협력사";
+      return "";
+    }
+
+    function getT(key) {
+      return (I18N[currentLang] && I18N[currentLang][key]) || I18N.ko[key] || key;
+    }
+
+    function getCourseLabel() {
+      const pack = COURSE_LABELS[rawCourse];
+      if (!pack) return rawCourse;
+      return pack[currentLang] || pack.ko || rawCourse;
+    }
+
+    function getTypeLabel(typeValue) {
+      if (typeValue === "직영") return getT("direct");
+      if (typeValue === "협력사") return getT("partner");
+      return "-";
+    }
+    function fillTypeSelect() { /* 구분은 QR 주소값으로만 처리 */ }
+
+    function fillAffiliation() {
+      const list = workerType === "협력사" ? PARTNER_ORGS : (workerType === "직영" ? DIRECT_ORGS : []);
+      const previous = el.affiliation.value;
+      el.affiliation.innerHTML = "";
+      const placeholder = new Option(getT("affiliationPlaceholder"), "");
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      el.affiliation.add(placeholder);
+      list.forEach(item => el.affiliation.add(new Option(item, item)));
+      if (list.includes(previous)) el.affiliation.value = previous;
+    }
+
+    function applyI18n() {
+      const meta = LANG_META[currentLang] || LANG_META.ko;
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = meta.dir;
+
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        const key = node.getAttribute("data-i18n");
+        node.textContent = getT(key);
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(node => {
+        const key = node.getAttribute("data-i18n-placeholder");
+        node.setAttribute("placeholder", getT(key));
+      });
+      document.querySelectorAll(".flag").forEach(flag => {
+        flag.classList.toggle("active", flag.dataset.lang === currentLang);
+      });
+
+      el.courseText.textContent = getCourseLabel();
+      el.typeText.textContent = getTypeLabel(workerType);
+      fillTypeSelect();
+      fillAffiliation();
+      clearMessage();
+    }
+
+    function changeLang(lang) {
+      if (!I18N[lang]) lang = "ko";
+      currentLang = lang;
+      applyI18n();
+    }
+
+    function clearMessage() {
+      el.message.className = "message";
+      el.message.textContent = "";
+    }
+
+    function showMessage(type, text) {
+      el.message.className = "message " + type;
+      el.message.textContent = text;
+    }
+
+    function selectedUnderstandText(code) {
+      return code === "Y" ? getT("yes") : getT("no");
+    }
+    function init() {
+      if (!workerType) {
+        workerType = "";
+        el.typeText.textContent = "QR 구분값 없음";
+      }
+      applyI18n();
+      if (!workerType) {
+        el.submitBtn.disabled = true;
+        showMessage("err", getT("qrTypeError"));
+      }
+    }
+
+    el.form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+
+      if (!SCRIPT_URL || SCRIPT_URL.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
+        showMessage("err", getT("setupError"));
+        return;
+      }
+
+      const understoodInput = document.querySelector("input[name='understood']:checked");
+      const understoodCode = understoodInput ? understoodInput.value : "";
+      const meta = LANG_META[currentLang] || LANG_META.ko;
+
+      const payload = {
+        submittedAtClient: new Date().toISOString(),
+        course: rawCourse,
+        courseDisplay: getCourseLabel(),
+        workerType: workerType,
+        workerTypeDisplay: getTypeLabel(workerType),
+        language: currentLang,
+        languageCode: meta.sheetCode,
+        languageName: meta.name,
+        name: el.name.value.trim(),
+        affiliation: el.affiliation.value,
+        understoodCode: understoodCode,
+        understoodText: selectedUnderstandText(understoodCode),
+        comment: el.comment.value.trim(),
+        pageUrl: location.href,
+        userAgent: navigator.userAgent
+      };
+
+      el.submitBtn.disabled = true;
+      el.submitBtn.textContent = getT("submitting");
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        el.form.reset();
+        fillAffiliation();
+        showMessage("ok", getT("success"));
+      } catch (err) {
+        showMessage("err", getT("error"));
+      } finally {
+        el.submitBtn.disabled = false;
+        el.submitBtn.textContent = getT("submit");
+      }
+    });
+
+    window.changeLang = changeLang;
+    init();
+  </script>
+</body>
+</html>
