@@ -3,270 +3,467 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>교육 이해도 확인</title>
-  <style>
-    :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #172033;
-      --muted: #687386;
-      --line: #dfe6f1;
-      --primary: #1769e0;
-      --primary-dark: #0f55b8;
-      --danger: #d83434;
-      --ok: #0b8f55;
-      --shadow: 0 10px 30px rgba(27, 47, 80, 0.12);
-    }
+  <title>교육 피드백</title>
+	<style>
+	  :root {
+		--bg: #f4f7fb;
+		--card: #ffffff;
+		--text: #172033;
+		--muted: #687386;
+		--line: #dfe6f1;
+		--primary: #1769e0;
+		--primary-dark: #0f55b8;
+		--danger: #d83434;
+		--ok: #0b8f55;
+		--shadow: 0 10px 30px rgba(27, 47, 80, 0.12);
+	  }
 
-    * { box-sizing: border-box; }
+	  * { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
-      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 42%, #eef2f7 100%);
-      color: var(--text);
-    }
+	  body {
+		margin: 0;
+		min-height: 100vh;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+		background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 42%, #eef2f7 100%);
+		color: var(--text);
+	  }
 
-    .wrap {
-      width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 14px 14px 36px;
-    }
+	  .wrap {
+		width: 100%;
+		max-width: 520px;
+		margin: 0 auto;
+		padding: 14px 14px 36px;
+	  }
 
-    .lang-bar {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 7px;
-      margin: 6px 0 12px;
-      padding: 10px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.74);
-      border: 1px solid rgba(224, 231, 242, 0.95);
-      box-shadow: 0 4px 16px rgba(25, 43, 70, 0.07);
-    }
+	  .lang-bar {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 7px;
+		margin: 6px 0 12px;
+		padding: 10px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.74);
+		border: 1px solid rgba(224, 231, 242, 0.95);
+		box-shadow: 0 4px 16px rgba(25, 43, 70, 0.07);
+	  }
 
-    .flag {
-      width: 100%;
-      height: 31px;
-      object-fit: cover;
-      border-radius: 7px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      background: #fff;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.14);
-      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-    }
+	  .flag {
+		width: 100%;
+		height: 31px;
+		object-fit: cover;
+		border-radius: 7px;
+		cursor: pointer;
+		border: 2px solid transparent;
+		background: #fff;
+		box-shadow: 0 1px 5px rgba(0,0,0,0.14);
+		transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+	  }
 
-    .flag:active { transform: scale(0.96); }
-    .flag.active {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.16);
-    }
+	  .flag:active { transform: scale(0.96); }
 
-    .card {
-      background: var(--card);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(222, 230, 242, 0.9);
-      overflow: hidden;
-    }
+	  .flag.active {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.16);
+	  }
 
-    .header {
-      padding: 22px 20px 16px;
-      background: linear-gradient(135deg, #155fd0 0%, #1c7af4 100%);
-      color: #fff;
-    }
+	  .card {
+		background: var(--card);
+		border-radius: 22px;
+		box-shadow: var(--shadow);
+		border: 1px solid rgba(222, 230, 242, 0.9);
+		overflow: hidden;
+	  }
 
-    .header h1 {
-      margin: 0 0 14px;
-      font-size: 24px;
-      letter-spacing: -0.5px;
-      text-align: center;
-    }
+	  .header {
+		padding: 22px 20px 16px;
+		background: linear-gradient(135deg, #155fd0 0%, #1c7af4 100%);
+		color: #fff;
+	  }
 
-    .meta {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      font-size: 14px;
-    }
+	  .header h1 {
+		margin: 0 0 14px;
+		font-size: 24px;
+		letter-spacing: -0.5px;
+		text-align: center;
+	  }
 
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 9px 11px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.14);
-      backdrop-filter: blur(8px);
-    }
+	  .meta {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 8px;
+		font-size: 14px;
+	  }
 
-    .meta-label { opacity: 0.84; white-space: nowrap; }
-    .meta-value { font-weight: 700; text-align: right; }
+	  .meta-row {
+		display: flex;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 9px 11px;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.14);
+		backdrop-filter: blur(8px);
+	  }
 
-    form { padding: 20px; }
+	  .meta-label {
+		opacity: 0.84;
+		white-space: nowrap;
+	  }
 
-    .field { margin-bottom: 18px; }
+	  .meta-value {
+		font-weight: 700;
+		text-align: right;
+	  }
 
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 2px;
-    }
+	  form { padding: 20px; }
 
-    .field-grid .field { margin-bottom: 18px; }
+	  .field { margin-bottom: 18px; }
 
-    .question-field {
-      margin-top: 2px;
-      padding-top: 2px;
-    }
+	  .field-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+		margin-bottom: 2px;
+	  }
 
-    label, .label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-    }
+	  .field-grid .field { margin-bottom: 18px; }
 
-    .required::after {
-      content: " *";
-      color: var(--danger);
-      font-weight: 800;
-    }
+	  .question-field {
+		margin-top: 2px;
+		padding-top: 2px;
+	  }
 
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px 13px;
-      font-size: 16px;
-      font-family: inherit;
-      outline: none;
-      background: #fff;
-      color: var(--text);
-      transition: border-color 0.12s ease, box-shadow 0.12s ease;
-    }
+	  label, .label {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--text);
+	  }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.12);
-    }
+	  .required::after {
+		content: " *";
+		color: var(--danger);
+		font-weight: 800;
+	  }
 
-    textarea {
-      min-height: 112px;
-      resize: vertical;
-      line-height: 1.45;
-    }
+	  input, select, textarea {
+		width: 100%;
+		border: 1px solid var(--line);
+		border-radius: 14px;
+		padding: 14px 13px;
+		font-size: 16px;
+		font-family: inherit;
+		outline: none;
+		background: #fff;
+		color: var(--text);
+		transition: border-color 0.12s ease, box-shadow 0.12s ease;
+	  }
 
-    .hint {
-      margin-top: 7px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
+	  input:focus, select:focus, textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.12);
+	  }
 
-    .radio-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+	  textarea {
+		min-height: 112px;
+		resize: vertical;
+		line-height: 1.45;
+	  }
 
-    .radio-card {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 15px;
-      background: #fff;
-      font-weight: 800;
-      cursor: pointer;
-      user-select: none;
-    }
+	  .hint {
+		margin-top: 7px;
+		font-size: 12px;
+		color: var(--muted);
+		line-height: 1.35;
+	  }
 
-    .radio-card input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
+	  .special-field {
+		display: none;
+		padding: 14px;
+		margin-bottom: 18px;
+		border: 1px solid #d8e7ff;
+		border-radius: 16px;
+		background: #f5f9ff;
+	  }
 
-    .radio-card:has(input:checked) {
-      border-color: var(--primary);
-      background: #edf5ff;
-      color: var(--primary-dark);
-      box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.1);
-    }
+	  .special-field.show { display: block; }
 
-    .actions { margin-top: 8px; }
+	  /* 점수 선택 영역 */
+	  .score-scale {
+		width: 100%;
+	  }
 
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 16px;
-      padding: 16px 14px;
-      font-size: 17px;
-      font-weight: 900;
-      color: #fff;
-      background: var(--primary);
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(23, 105, 224, 0.25);
-    }
+	  .score-group {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 0;
+		width: 100%;
+		height: 62px;
+		border: 1px solid #b8c4d4;
+		border-radius: 12px;
+		overflow: hidden;
+		background: #fff;
+		direction: ltr;
+	  }
 
-    button:disabled {
-      opacity: 0.62;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+	  .score-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 62px;
+		min-height: 62px;
+		padding: 0;
+		margin: 0;
+		border: 0;
+		border-right: 1px solid #c8d2df;
+		border-radius: 0;
+		background: #fff;
+		cursor: pointer;
+		user-select: none;
+		text-align: center;
+		transition: background 0.12s ease, color 0.12s ease;
+	  }
 
-    .message {
-      display: none;
-      margin-top: 14px;
-      padding: 13px 14px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
+	  .score-card:last-child {
+		border-right: 0;
+	  }
 
-    .message.ok {
-      display: block;
-      color: #075c38;
-      background: #e9f8f0;
-      border: 1px solid #bde9d1;
-    }
+	  .score-card strong {
+		display: block;
+		margin: 0;
+		padding: 0;
+		font-size: 18px;
+		line-height: 1;
+		font-weight: 900;
+		color: #273247;
+		background: transparent;
+	  }
 
-    .message.err {
-      display: block;
-      color: #9d1b1b;
-      background: #fff0f0;
-      border: 1px solid #f3c6c6;
-    }
+	  .score-card input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	  }
 
-    .footer-note {
-      padding: 13px 20px 20px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.45;
-    }
+	  .score-card:hover {
+		background: #f3f8ff;
+	  }
 
-    [dir="rtl"] body, [dir="rtl"] input, [dir="rtl"] select, [dir="rtl"] textarea, [dir="rtl"] button {
-      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    }
+	  .score-card:has(input:checked),
+	  .score-card.selected {
+		background: var(--primary) !important;
+		color: #fff !important;
+		box-shadow: none !important;
+		outline: none !important;
+	  }
 
-    @media (max-width: 360px) {
-      .lang-bar { grid-template-columns: repeat(5, 1fr); }
-      .header h1 { font-size: 22px; }
-      .field-grid { grid-template-columns: 1fr; gap: 0; }
-      form { padding: 18px 16px; }
-    }
-  </style>
+	  .score-card:has(input:checked) strong,
+	  .score-card.selected strong {
+		color: #fff !important;
+		background: transparent !important;
+	  }
+
+	  .score-labels {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		margin-top: 8px;
+		font-size: 12px;
+		color: var(--muted);
+		line-height: 1.3;
+		font-weight: 700;
+		direction: ltr;
+	  }
+
+	  .score-labels span:first-child {
+		text-align: left;
+	  }
+
+	  .score-labels span:last-child {
+		text-align: right;
+	  }
+
+	  .checkbox-group {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 9px;
+	  }
+
+	  .checkbox-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 48px;
+		padding: 10px;
+		border: 1px solid var(--line);
+		border-radius: 14px;
+		background: #fff;
+		cursor: pointer;
+		user-select: none;
+		font-size: 14px;
+		font-weight: 800;
+		text-align: center;
+	  }
+
+	  .checkbox-card input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	  }
+
+	  .checkbox-card:has(input:checked) {
+		border-color: var(--primary);
+		background: #edf5ff;
+		color: var(--primary-dark);
+		box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.08);
+	  }
+
+	  .radio-group {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+	  }
+
+	  .radio-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 52px;
+		padding: 12px;
+		border: 1px solid var(--line);
+		border-radius: 15px;
+		background: #fff;
+		font-weight: 800;
+		cursor: pointer;
+		user-select: none;
+	  }
+
+	  .radio-card input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	  }
+
+	  .radio-card:has(input:checked) {
+		border-color: var(--primary);
+		background: #edf5ff;
+		color: var(--primary-dark);
+		box-shadow: 0 0 0 4px rgba(23, 105, 224, 0.1);
+	  }
+
+	  .actions { margin-top: 8px; }
+
+	  button {
+		width: 100%;
+		border: 0;
+		border-radius: 16px;
+		padding: 16px 14px;
+		font-size: 17px;
+		font-weight: 900;
+		color: #fff;
+		background: var(--primary);
+		cursor: pointer;
+		box-shadow: 0 8px 18px rgba(23, 105, 224, 0.25);
+	  }
+
+	  button:disabled {
+		opacity: 0.62;
+		cursor: not-allowed;
+		box-shadow: none;
+	  }
+
+	  .message {
+		display: none;
+		margin-top: 14px;
+		padding: 13px 14px;
+		border-radius: 14px;
+		font-size: 14px;
+		line-height: 1.4;
+		white-space: pre-wrap;
+	  }
+
+	  .message.ok {
+		display: block;
+		color: #075c38;
+		background: #e9f8f0;
+		border: 1px solid #bde9d1;
+	  }
+
+	  .message.err {
+		display: block;
+		color: #9d1b1b;
+		background: #fff0f0;
+		border: 1px solid #f3c6c6;
+	  }
+
+	  .footer-note {
+		padding: 13px 20px 20px;
+		font-size: 12px;
+		color: var(--muted);
+		text-align: center;
+		line-height: 1.45;
+	  }
+
+	  [dir="rtl"] body,
+	  [dir="rtl"] input,
+	  [dir="rtl"] select,
+	  [dir="rtl"] textarea,
+	  [dir="rtl"] button {
+		font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+	  }
+
+	  @media (max-width: 420px) {
+		.score-group {
+		  height: 58px;
+		  grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+
+		.score-card {
+		  height: 58px;
+		  min-height: 58px;
+		  padding: 0;
+		}
+
+		.score-card strong {
+		  font-size: 17px;
+		}
+
+		.checkbox-group {
+		  grid-template-columns: 1fr 1fr;
+		}
+	  }
+
+	  @media (max-width: 360px) {
+		.lang-bar {
+		  grid-template-columns: repeat(5, 1fr);
+		}
+
+		.header h1 {
+		  font-size: 22px;
+		}
+
+		.field-grid {
+		  grid-template-columns: 1fr;
+		  gap: 0;
+		}
+
+		form {
+		  padding: 18px 16px;
+		}
+
+		.score-group {
+		  height: 56px;
+		}
+
+		.score-card {
+		  height: 56px;
+		  min-height: 56px;
+		}
+	  }
+	</style>
 </head>
 <body>
   <div class="wrap">
@@ -312,22 +509,55 @@
           </div>
         </div>
 
+        <div class="field special-field" id="specialCourseField">
+          <label for="specialCourse" class="required" data-i18n="specialCourseLabel">특별교육 과정을 선택해 주세요</label>
+          <select id="specialCourse" name="specialCourse"></select>
+          <div class="hint" data-i18n="specialCourseHint">특별안전보건교육 QR에서만 표시됩니다.</div>
+        </div>
+
         <div class="field question-field">
-          <div class="label required" data-i18n="understandLabel">교육을 이해했습니까?</div>
-          <div class="radio-group">
-            <label class="radio-card">
-              <input type="radio" name="understood" value="Y" required />
-              <span data-i18n="yes">예</span>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="understood" value="N" required />
-              <span data-i18n="no">아니오</span>
-            </label>
+          <div class="label required" data-i18n="q1Label">1. 오늘 교육은 이해하기 쉬웠습니까?</div>
+          <div class="score-scale">
+            <div class="score-group" role="radiogroup" aria-label="q1">
+              <label class="score-card"><input type="radio" name="q1_score" value="1" required /><strong>1</strong></label>
+              <label class="score-card"><input type="radio" name="q1_score" value="2" required /><strong>2</strong></label>
+              <label class="score-card"><input type="radio" name="q1_score" value="3" required /><strong>3</strong></label>
+              <label class="score-card"><input type="radio" name="q1_score" value="4" required /><strong>4</strong></label>
+              <label class="score-card"><input type="radio" name="q1_score" value="5" required /><strong>5</strong></label>
+            </div>
+            <div class="score-labels"><span data-i18n="scoreLow">전혀 아니다</span><span data-i18n="scoreHigh">매우 그렇다</span></div>
+          </div>
+        </div>
+
+        <div class="field question-field">
+          <div class="label required" data-i18n="q2Label">2. 오늘 교육이 실제 작업에 도움이 되었습니까?</div>
+          <div class="score-scale">
+            <div class="score-group" role="radiogroup" aria-label="q2">
+              <label class="score-card"><input type="radio" name="q2_score" value="1" required /><strong>1</strong></label>
+              <label class="score-card"><input type="radio" name="q2_score" value="2" required /><strong>2</strong></label>
+              <label class="score-card"><input type="radio" name="q2_score" value="3" required /><strong>3</strong></label>
+              <label class="score-card"><input type="radio" name="q2_score" value="4" required /><strong>4</strong></label>
+              <label class="score-card"><input type="radio" name="q2_score" value="5" required /><strong>5</strong></label>
+            </div>
+            <div class="score-labels"><span data-i18n="scoreLow">전혀 아니다</span><span data-i18n="scoreHigh">매우 그렇다</span></div>
           </div>
         </div>
 
         <div class="field">
-          <label for="comment" data-i18n="commentLabel">교육에 추가했으면 하는 내용이나, 교육에 대한 건의사항이 있으시면 적어주세요.</label>
+          <div class="label" data-i18n="improvementLabel">3. 개선이 필요한 부분이 있습니까? ※ 선택</div>
+          <div class="checkbox-group">
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="교육시간" /><span data-i18n="impTime">교육시간</span></label>
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="교육자료" /><span data-i18n="impMaterial">교육자료</span></label>
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="설명방식" /><span data-i18n="impExplain">설명방식</span></label>
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="통역/번역" /><span data-i18n="impTranslation">통역/번역</span></label>
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="현장 적용성" /><span data-i18n="impField">현장 적용성</span></label>
+            <label class="checkbox-card"><input type="checkbox" name="improvement" value="기타" /><span data-i18n="impEtc">기타</span></label>
+          </div>
+          <div class="hint" data-i18n="improvementHint">복수 선택 가능하며, 해당 없으면 선택하지 않고 제출할 수 있습니다.</div>
+        </div>
+
+        <div class="field">
+          <label for="comment" data-i18n="commentLabel2">4. 건의사항 ※ 선택</label>
           <textarea id="comment" name="comment" data-i18n-placeholder="commentPlaceholder" placeholder="내용을 입력하세요. 없으면 비워두셔도 됩니다."></textarea>
         </div>
 
@@ -345,7 +575,7 @@
     /*****************************************************************
      * 1) Google Apps Script 웹앱 URL을 아래에 붙여넣으세요.
      *****************************************************************/
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkyV6-xAR1ZaYRk3Qo1k1l3um6VYgaq1z2hJ0pWbSD8dH3Re1-grU0J7JFOhoNfMww/exec";
+    const SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
     /*****************************************************************
      * 2) 소속 목록
@@ -358,6 +588,22 @@
     const PARTNER_ORGS = [
       "해양", "연승", "우솔", "경한", "이륙", "성훈",
       "명우", "유영", "일성", "백영", "성주", "해봉"
+    ];
+
+
+    /*****************************************************************
+     * 특별안전보건교육 세부과정 목록
+     * - 항목 추가/수정은 이 배열만 수정하면 됩니다.
+     * - code는 DB 저장용, ko/en/vi...는 화면 표시용입니다.
+     *****************************************************************/
+    const SPECIAL_COURSES = [
+      { code: "aerial_lift", ko: "고소차", en: "Aerial Lift", ne: "एरियल लिफ्ट", vi: "Xe nâng người", tr: "Yükseltici Platform", ru: "Автоподъемник", fr: "Nacelle élévatrice", zh: "高空作业车", th: "รถกระเช้า", ar: "منصة رفع", uz: "Ko‘taruvchi platforma" },
+      { code: "gondola", ko: "곤돌라", en: "Gondola", ne: "गोन्डोला", vi: "Gondola", tr: "Gondol", ru: "Гондола", fr: "Gondole", zh: "吊篮", th: "กอนโดลา", ar: "جندول", uz: "Gondola" },
+      { code: "remote_crane", ko: "리모컨크레인", en: "Remote Control Crane", ne: "रिमोट कन्ट्रोल क्रेन", vi: "Cẩu điều khiển từ xa", tr: "Uzaktan Kumandalı Vinç", ru: "Кран с дистанционным управлением", fr: "Grue télécommandée", zh: "遥控起重机", th: "เครนควบคุมระยะไกล", ar: "رافعة بالتحكم عن بعد", uz: "Masofadan boshqariladigan kran" },
+      { code: "signal_person", ko: "신호수", en: "Signal Person", ne: "सिग्नल म्यान", vi: "Người ra tín hiệu", tr: "İşaretçi", ru: "Сигнальщик", fr: "Signaleur", zh: "指挥信号员", th: "ผู้ให้สัญญาณ", ar: "عامل الإشارة", uz: "Signal beruvchi" },
+      { code: "forklift", ko: "지게차", en: "Forklift", ne: "फोर्कलिफ्ट", vi: "Xe nâng", tr: "Forklift", ru: "Погрузчик", fr: "Chariot élévateur", zh: "叉车", th: "รถโฟล์คลิฟท์", ar: "رافعة شوكية", uz: "Avtoyuklagich" },
+      { code: "transporter", ko: "트렌스포터", en: "Transporter", ne: "ट्रान्सपोर्टर", vi: "Xe vận chuyển", tr: "Taşıyıcı", ru: "Транспортер", fr: "Transporteur", zh: "运输车", th: "รถขนส่ง", ar: "ناقلة", uz: "Transporter" },
+      { code: "foreign_worker", ko: "외국인", en: "Foreign Worker", ne: "विदेशी कामदार", vi: "Lao động nước ngoài", tr: "Yabancı İşçi", ru: "Иностранный работник", fr: "Travailleur étranger", zh: "外国工人", th: "แรงงานต่างชาติ", ar: "عامل أجنبي", uz: "Chet ellik ishchi" }
     ];
 
     /*****************************************************************
@@ -388,6 +634,25 @@
         namePlaceholder: "이름을 입력하세요",
         affiliationLabel: "소속",
         affiliationPlaceholder: "소속을 선택하세요",
+        specialCourseLabel: "특별교육 과정을 선택해 주세요",
+        specialCoursePlaceholder: "특별교육 과정을 선택하세요",
+        specialCourseHint: "특별안전보건교육 QR에서만 표시됩니다.",
+        q1Label: "1. 오늘 교육은 이해하기 쉬웠습니까?",
+        q2Label: "2. 오늘 교육이 실제 작업에 도움이 되었습니까?",
+        score5: "매우 그렇다",
+        score4: "그렇다",
+        score3: "보통",
+        score2: "아니다",
+        score1: "전혀 아니다",
+        improvementLabel: "3. 개선이 필요한 부분이 있습니까? ※ 선택",
+        improvementHint: "복수 선택 가능하며, 해당 없으면 선택하지 않고 제출할 수 있습니다.",
+        impTime: "교육시간",
+        impMaterial: "교육자료",
+        impExplain: "설명방식",
+        impTranslation: "통역/번역",
+        impField: "현장 적용성",
+        impEtc: "기타",
+        commentLabel2: "4. 건의사항 ※ 선택",
         understandLabel: "교육을 이해했습니까?",
         yes: "예",
         no: "아니오",
@@ -678,7 +943,162 @@
       }
     };
 
+    const I18N_EXTRA = {
+      ko: {
+        specialCourseLabel: "특별교육 과정을 선택해 주세요",
+        specialCoursePlaceholder: "특별교육 과정을 선택하세요",
+        specialCourseHint: "특별안전보건교육 QR에서만 표시됩니다.",
+        q1Label: "1. 오늘 교육은 이해하기 쉬웠습니까?",
+        q2Label: "2. 오늘 교육이 실제 작업에 도움이 되었습니까?",
+        scoreLow: "전혀 아니다",
+        scoreHigh: "매우 그렇다",
+        improvementLabel: "3. 개선이 필요한 부분이 있습니까? ※ 복수 선택 가능",
+        improvementHint: "해당 없으면 선택하지 않고 제출할 수 있습니다.",
+        impTime: "교육시간", impMaterial: "교육자료", impExplain: "설명방식", impTranslation: "통역/번역", impField: "현장 적용성", impEtc: "기타",
+        commentLabel2: "4. 건의사항 ※ 선택"
+      },
+      en: {
+        specialCourseLabel: "Select the special training course",
+        specialCoursePlaceholder: "Select the special training course",
+        specialCourseHint: "This appears only for the Special Safety Training QR.",
+        q1Label: "1. Was today's training easy to understand?",
+        q2Label: "2. Was today's training helpful for your actual work?",
+        scoreLow: "Strongly disagree",
+        scoreHigh: "Strongly agree",
+        improvementLabel: "3. What needs improvement? ※ Multiple selections allowed",
+        improvementHint: "You may submit without selecting anything if not applicable.",
+        impTime: "Training time", impMaterial: "Training materials", impExplain: "Explanation method", impTranslation: "Interpretation/Translation", impField: "Field applicability", impEtc: "Other",
+        commentLabel2: "4. Suggestions ※ Optional"
+      },
+      ne: {
+        specialCourseLabel: "विशेष तालिम कोर्स चयन गर्नुहोस्",
+        specialCoursePlaceholder: "विशेष तालिम कोर्स चयन गर्नुहोस्",
+        specialCourseHint: "यो विशेष सुरक्षा तालिम QR मा मात्र देखिन्छ।",
+        q1Label: "1. आजको तालिम बुझ्न सजिलो थियो?",
+        q2Label: "2. आजको तालिम वास्तविक काममा उपयोगी भयो?",
+        scoreLow: "बिल्कुल सहमत छैन",
+        scoreHigh: "पूर्ण रूपमा सहमत",
+        improvementLabel: "3. सुधार आवश्यक भाग के छ? ※ धेरै चयन गर्न सकिन्छ",
+        improvementHint: "लागू हुँदैन भने केही चयन नगरी पेश गर्न सक्नुहुन्छ।",
+        impTime: "तालिम समय", impMaterial: "तालिम सामग्री", impExplain: "व्याख्या तरिका", impTranslation: "दोभाषे/अनुवाद", impField: "काममा लागू हुने", impEtc: "अन्य",
+        commentLabel2: "4. सुझाव ※ वैकल्पिक"
+      },
+      vi: {
+        specialCourseLabel: "Chọn khóa đào tạo đặc biệt",
+        specialCoursePlaceholder: "Chọn khóa đào tạo đặc biệt",
+        specialCourseHint: "Chỉ hiển thị trong QR Đào tạo an toàn đặc biệt.",
+        q1Label: "1. Nội dung đào tạo hôm nay có dễ hiểu không?",
+        q2Label: "2. Đào tạo hôm nay có hữu ích cho công việc thực tế không?",
+        scoreLow: "Hoàn toàn không đồng ý",
+        scoreHigh: "Hoàn toàn đồng ý",
+        improvementLabel: "3. Phần nào cần cải thiện? ※ Có thể chọn nhiều mục",
+        improvementHint: "Nếu không có, bạn có thể gửi mà không chọn mục nào.",
+        impTime: "Thời gian đào tạo", impMaterial: "Tài liệu đào tạo", impExplain: "Cách giải thích", impTranslation: "Phiên dịch/Dịch thuật", impField: "Áp dụng tại hiện trường", impEtc: "Khác",
+        commentLabel2: "4. Góp ý ※ Không bắt buộc"
+      },
+      tr: {
+        specialCourseLabel: "Özel eğitim kursunu seçin",
+        specialCoursePlaceholder: "Özel eğitim kursunu seçin",
+        specialCourseHint: "Yalnızca Özel Güvenlik Eğitimi QR'ında gösterilir.",
+        q1Label: "1. Bugünkü eğitimi anlamak kolay mıydı?",
+        q2Label: "2. Bugünkü eğitim gerçek işiniz için faydalı oldu mu?",
+        scoreLow: "Kesinlikle katılmıyorum",
+        scoreHigh: "Kesinlikle katılıyorum",
+        improvementLabel: "3. Hangi bölüm iyileştirilmeli? ※ Birden fazla seçim yapılabilir",
+        improvementHint: "Uygun değilse seçim yapmadan gönderebilirsiniz.",
+        impTime: "Eğitim süresi", impMaterial: "Eğitim materyali", impExplain: "Anlatım şekli", impTranslation: "Tercüme/Çeviri", impField: "Sahada uygulanabilirlik", impEtc: "Diğer",
+        commentLabel2: "4. Öneriler ※ İsteğe bağlı"
+      },
+      ru: {
+        specialCourseLabel: "Выберите специальный курс обучения",
+        specialCoursePlaceholder: "Выберите специальный курс обучения",
+        specialCourseHint: "Отображается только для QR специального обучения по безопасности.",
+        q1Label: "1. Было ли сегодняшнее обучение понятным?",
+        q2Label: "2. Было ли сегодняшнее обучение полезным для фактической работы?",
+        scoreLow: "Совершенно не согласен",
+        scoreHigh: "Полностью согласен",
+        improvementLabel: "3. Что нужно улучшить? ※ Можно выбрать несколько вариантов",
+        improvementHint: "Если ничего нет, можно отправить без выбора.",
+        impTime: "Время обучения", impMaterial: "Учебные материалы", impExplain: "Способ объяснения", impTranslation: "Устный/письменный перевод", impField: "Применимость на рабочем месте", impEtc: "Другое",
+        commentLabel2: "4. Предложения ※ Необязательно"
+      },
+      fr: {
+        specialCourseLabel: "Sélectionnez la formation spéciale",
+        specialCoursePlaceholder: "Sélectionnez la formation spéciale",
+        specialCourseHint: "Affiché uniquement pour le QR de formation spéciale à la sécurité.",
+        q1Label: "1. La formation d'aujourd'hui était-elle facile à comprendre ?",
+        q2Label: "2. La formation d'aujourd'hui a-t-elle été utile pour le travail réel ?",
+        scoreLow: "Pas du tout d'accord",
+        scoreHigh: "Tout à fait d'accord",
+        improvementLabel: "3. Que faut-il améliorer ? ※ Choix multiples possibles",
+        improvementHint: "S'il n'y a rien, vous pouvez envoyer sans rien sélectionner.",
+        impTime: "Durée de formation", impMaterial: "Documents de formation", impExplain: "Méthode d'explication", impTranslation: "Interprétation/Traduction", impField: "Application sur le terrain", impEtc: "Autre",
+        commentLabel2: "4. Suggestions ※ Facultatif"
+      },
+      zh: {
+        specialCourseLabel: "请选择特别教育课程",
+        specialCoursePlaceholder: "请选择特别教育课程",
+        specialCourseHint: "仅在特别安全教育二维码中显示。",
+        q1Label: "1. 今天的教育内容容易理解吗？",
+        q2Label: "2. 今天的教育对实际工作有帮助吗？",
+        scoreLow: "完全不同意",
+        scoreHigh: "非常同意",
+        improvementLabel: "3. 哪些部分需要改善？※ 可多选",
+        improvementHint: "如无相关内容，可不选择直接提交。",
+        impTime: "教育时间", impMaterial: "教育资料", impExplain: "说明方式", impTranslation: "口译/翻译", impField: "现场适用性", impEtc: "其他",
+        commentLabel2: "4. 建议事项 ※ 可选"
+      },
+      th: {
+        specialCourseLabel: "เลือกหลักสูตรอบรมพิเศษ",
+        specialCoursePlaceholder: "เลือกหลักสูตรอบรมพิเศษ",
+        specialCourseHint: "แสดงเฉพาะ QR การอบรมความปลอดภัยพิเศษเท่านั้น",
+        q1Label: "1. การอบรมวันนี้เข้าใจง่ายหรือไม่?",
+        q2Label: "2. การอบรมวันนี้มีประโยชน์ต่อการทำงานจริงหรือไม่?",
+        scoreLow: "ไม่เห็นด้วยอย่างยิ่ง",
+        scoreHigh: "เห็นด้วยอย่างยิ่ง",
+        improvementLabel: "3. ส่วนใดควรปรับปรุง? ※ เลือกได้หลายข้อ",
+        improvementHint: "หากไม่มี สามารถส่งโดยไม่เลือกได้",
+        impTime: "เวลาอบรม", impMaterial: "เอกสารอบรม", impExplain: "วิธีอธิบาย", impTranslation: "ล่าม/การแปล", impField: "การใช้งานในหน้างาน", impEtc: "อื่นๆ",
+        commentLabel2: "4. ข้อเสนอแนะ ※ ไม่บังคับ"
+      },
+      ar: {
+        specialCourseLabel: "اختر دورة التدريب الخاصة",
+        specialCoursePlaceholder: "اختر دورة التدريب الخاصة",
+        specialCourseHint: "يظهر فقط في رمز QR الخاص بتدريب السلامة الخاص.",
+        q1Label: "1. هل كان تدريب اليوم سهل الفهم؟",
+        q2Label: "2. هل كان تدريب اليوم مفيدًا للعمل الفعلي؟",
+        scoreLow: "لا أوافق بشدة",
+        scoreHigh: "أوافق بشدة",
+        improvementLabel: "3. ما الذي يحتاج إلى تحسين؟ ※ يمكن اختيار أكثر من خيار",
+        improvementHint: "إذا لم يكن هناك شيء، يمكنك الإرسال دون اختيار.",
+        impTime: "وقت التدريب", impMaterial: "مواد التدريب", impExplain: "طريقة الشرح", impTranslation: "الترجمة الفورية/التحريرية", impField: "قابلية التطبيق في الموقع", impEtc: "أخرى",
+        commentLabel2: "4. اقتراحات ※ اختياري"
+      },
+      uz: {
+        specialCourseLabel: "Maxsus o‘quv kursini tanlang",
+        specialCoursePlaceholder: "Maxsus o‘quv kursini tanlang",
+        specialCourseHint: "Faqat maxsus xavfsizlik o‘quvi QR kodida ko‘rsatiladi.",
+        q1Label: "1. Bugungi o‘quvni tushunish oson bo‘ldimi?",
+        q2Label: "2. Bugungi o‘quv amaliy ishingizga foydali bo‘ldimi?",
+        scoreLow: "Umuman rozi emasman",
+        scoreHigh: "To‘liq roziman",
+        improvementLabel: "3. Qaysi qism yaxshilanishi kerak? ※ Bir nechta tanlash mumkin",
+        improvementHint: "Agar yo‘q bo‘lsa, hech narsa tanlamasdan yuborishingiz mumkin.",
+        impTime: "O‘quv vaqti", impMaterial: "O‘quv materiallari", impExplain: "Tushuntirish usuli", impTranslation: "Tarjima", impField: "Ish joyida qo‘llash", impEtc: "Boshqa",
+        commentLabel2: "4. Takliflar ※ Ixtiyoriy"
+      }
+    };
+
     const COURSE_LABELS = {
+      "신규입사자교육": {
+        ko: "신규입사자교육", en: "New Employee Training", ne: "नयाँ कर्मचारी तालिम", vi: "Đào tạo nhân viên mới", tr: "Yeni Çalışan Eğitimi", ru: "Обучение новых работников", fr: "Formation des nouveaux employés", zh: "新员工培训", th: "การอบรมพนักงานใหม่", ar: "تدريب الموظفين الجدد", uz: "Yangi xodimlar o‘quvi"
+      },
+      "특별안전보건교육": {
+        ko: "특별안전보건교육", en: "Special Safety and Health Training", ne: "विशेष सुरक्षा तथा स्वास्थ्य तालिम", vi: "Đào tạo an toàn vệ sinh lao động đặc biệt", tr: "Özel İş Sağlığı ve Güvenliği Eğitimi", ru: "Специальное обучение по охране труда", fr: "Formation spéciale en santé et sécurité", zh: "特别安全保健教育", th: "การอบรมความปลอดภัยและอาชีวอนามัยพิเศษ", ar: "تدريب خاص للسلامة والصحة المهنية", uz: "Maxsus mehnat xavfsizligi va sog‘liq o‘quvi"
+      },
+      "정기안전보건교육": {
+        ko: "정기안전보건교육", en: "Regular Safety and Health Training", ne: "नियमित सुरक्षा तथा स्वास्थ्य तालिम", vi: "Đào tạo an toàn vệ sinh lao động định kỳ", tr: "Periyodik İş Sağlığı ve Güvenliği Eğitimi", ru: "Периодическое обучение по охране труда", fr: "Formation régulière en santé et sécurité", zh: "定期安全保健教育", th: "การอบรมความปลอดภัยและอาชีวอนามัยประจำ", ar: "تدريب دوري للسلامة والصحة المهنية", uz: "Davriy mehnat xavfsizligi va sog‘liq o‘quvi"
+      },
       "신규교육": {
         ko: "신규교육", en: "New Employee Training", ne: "नयाँ कर्मचारी तालिम", vi: "Đào tạo nhân viên mới", tr: "Yeni Çalışan Eğitimi", ru: "Обучение новых работников", fr: "Formation des nouveaux employés", zh: "新员工培训", th: "การอบรมพนักงานใหม่", ar: "تدريب الموظفين الجدد", uz: "Yangi xodimlar o‘quvi"
       },
@@ -757,6 +1177,8 @@
       affiliation: document.getElementById("affiliation"),
       workerType: document.getElementById("workerType"),
       typeSelectField: document.getElementById("typeSelectField"),
+      specialCourseField: document.getElementById("specialCourseField"),
+      specialCourse: document.getElementById("specialCourse"),
       courseText: document.getElementById("courseText"),
       typeText: document.getElementById("typeText"),
       message: document.getElementById("message"),
@@ -778,7 +1200,10 @@
     }
 
     function getT(key) {
-      return (I18N[currentLang] && I18N[currentLang][key]) || I18N.ko[key] || key;
+      return (I18N_EXTRA[currentLang] && I18N_EXTRA[currentLang][key]) ||
+             (I18N[currentLang] && I18N[currentLang][key]) ||
+             (I18N_EXTRA.ko && I18N_EXTRA.ko[key]) ||
+             I18N.ko[key] || key;
     }
 
     function getCourseLabel() {
@@ -813,6 +1238,39 @@
       if (list.includes(previous)) el.affiliation.value = previous;
     }
 
+
+    function isSpecialCourse() {
+      return String(rawCourse || "").replace(/\s+/g, "").includes("특별안전보건교육") ||
+             String(rawCourse || "").replace(/\s+/g, "").includes("특별교육");
+    }
+
+    function fillSpecialCourse() {
+      if (!el.specialCourse || !el.specialCourseField) return;
+      const previous = el.specialCourse.value;
+      el.specialCourse.innerHTML = "";
+      const placeholder = new Option(getT("specialCoursePlaceholder"), "");
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      el.specialCourse.add(placeholder);
+      SPECIAL_COURSES.forEach(item => el.specialCourse.add(new Option(getSpecialCourseName(item.code), item.code)));
+      if (SPECIAL_COURSES.some(item => item.code === previous)) el.specialCourse.value = previous;
+
+      const show = isSpecialCourse();
+      el.specialCourseField.classList.toggle("show", show);
+      el.specialCourse.required = show;
+    }
+
+    function getSpecialCourseName(code) {
+      const found = SPECIAL_COURSES.find(item => item.code === code);
+      if (!found) return "";
+      return found[currentLang] || found.en || found.ko || "";
+    }
+
+    function getSpecialCourseBaseName(code) {
+      const found = SPECIAL_COURSES.find(item => item.code === code);
+      return found ? found.ko : "";
+    }
+
     function applyI18n() {
       const meta = LANG_META[currentLang] || LANG_META.ko;
       document.documentElement.lang = currentLang;
@@ -834,6 +1292,7 @@
       el.typeText.textContent = getTypeLabel(workerType);
       fillTypeSelect();
       fillAffiliation();
+      fillSpecialCourse();
       clearMessage();
     }
 
@@ -877,14 +1336,23 @@
         return;
       }
 
-      const understoodInput = document.querySelector("input[name='understood']:checked");
-      const understoodCode = understoodInput ? understoodInput.value : "";
+      const q1Input = document.querySelector("input[name='q1_score']:checked");
+      const q2Input = document.querySelector("input[name='q2_score']:checked");
+      const q1Score = q1Input ? q1Input.value : "";
+      const q2Score = q2Input ? q2Input.value : "";
+      const improvements = Array.from(document.querySelectorAll("input[name='improvement']:checked")).map(input => input.value);
       const meta = LANG_META[currentLang] || LANG_META.ko;
+      const specialCourseCode = isSpecialCourse() ? el.specialCourse.value : "";
+      const specialCourseName = isSpecialCourse() ? getSpecialCourseBaseName(specialCourseCode) : "";
+      const specialCourseDisplay = isSpecialCourse() ? getSpecialCourseName(specialCourseCode) : "";
 
       const payload = {
         submittedAtClient: new Date().toISOString(),
         course: rawCourse,
         courseDisplay: getCourseLabel(),
+        specialCourseCode: specialCourseCode,
+        specialCourseName: specialCourseName,
+        specialCourseDisplay: specialCourseDisplay,
         workerType: workerType,
         workerTypeDisplay: getTypeLabel(workerType),
         language: currentLang,
@@ -893,9 +1361,12 @@
         name: el.name.value.trim(),
         affiliation: getOrgLabel(el.affiliation.value),
         affiliationBase: el.affiliation.value,
-        understoodCode: understoodCode,
-        understoodText: selectedUnderstandText(understoodCode),
-        comment: el.comment.value.trim(),
+        q1Score: q1Score,
+        q1Text: "오늘 교육은 이해하기 쉬웠습니까?",
+        q2Score: q2Score,
+        q2Text: "오늘 교육이 실제 작업에 도움이 되었습니까?",
+        improvement: improvements.length ? improvements.join(", ") : "-",
+        comment: el.comment.value.trim() || "-",
         pageUrl: location.href,
         userAgent: navigator.userAgent
       };
