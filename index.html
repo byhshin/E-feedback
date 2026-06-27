@@ -505,7 +505,7 @@
 
     <main class="card">
       <section class="header">
-        <h1 data-i18n="title">교육 이해도 확인</h1>
+        <h1 data-i18n="title">교육 이수 후 피드백</h1>
         <div class="meta">
           <div class="meta-row">
             <span class="meta-label" data-i18n="courseLabel">교육과정</span>
@@ -538,7 +538,7 @@
         </div>
 
         <div class="field question-field">
-          <div class="label required" data-i18n="q1Label">1. 오늘 교육은 이해하기 쉬웠습니까?</div>
+          <div class="label required" data-i18n="q1Label">1. 오늘 이수한 교육은 이해하기 쉬웠습니까?</div>
           <div class="score-scale">
             <div class="score-group" role="radiogroup" aria-label="q1">
               <label class="score-card"><input type="radio" name="q1_score" value="1" required /><strong>1</strong></label>
@@ -552,7 +552,7 @@
         </div>
 
         <div class="field question-field">
-          <div class="label required" data-i18n="q2Label">2. 오늘 교육이 실제 작업에 도움이 되었습니까?</div>
+          <div class="label required" data-i18n="q2Label">2. 오늘 이수한 교육이 실제 작업에 도움이 되었습니까?</div>
           <div class="score-scale">
             <div class="score-group" role="radiogroup" aria-label="q2">
               <label class="score-card"><input type="radio" name="q2_score" value="1" required /><strong>1</strong></label>
@@ -589,7 +589,7 @@
         <div id="message" class="message"></div>
       </form>
 
-      <div class="footer-note" data-i18n="footer">제출 전 입력 내용을 확인해 주세요.</div>
+      <div class="footer-note" data-i18n="footer">교육 이수 후 입력해 주세요.</div>
 
 		<div class="dk-logo-footer">
 		  <img src="https://raw.githubusercontent.com/byhshin/safetyfeedback/main/logo.png" alt="DK Logo">
@@ -602,6 +602,43 @@
      * 1) Google Apps Script 웹앱 URL을 아래에 붙여넣으세요.
      *****************************************************************/
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkyV6-xAR1ZaYRk3Qo1k1l3um6VYgaq1z2hJ0pWbSD8dH3Re1-grU0J7JFOhoNfMww/exec";
+
+    const ALLOWED_UPLOAD_RANGES_CLIENT = [
+      { start: "08:00", end: "10:00" },
+      { start: "10:10", end: "12:00" },
+      { start: "13:00", end: "15:00" },
+      { start: "15:10", end: "17:00" }
+    ];
+
+    function isUploadAllowedNowClient() {
+      const now = new Date();
+      const current = now.getHours() * 60 + now.getMinutes();
+
+      return ALLOWED_UPLOAD_RANGES_CLIENT.some(function(range) {
+        const start = parseUploadTimeToMinutesClient(range.start);
+        const end = parseUploadTimeToMinutesClient(range.end);
+        return current >= start && current < end;
+      });
+    }
+
+    function parseUploadTimeToMinutesClient(value) {
+      const parts = String(value).split(":");
+      return Number(parts[0]) * 60 + Number(parts[1]);
+    }
+
+    function getAllowedUploadTextClient() {
+      return ALLOWED_UPLOAD_RANGES_CLIENT
+        .map(function(range) {
+          return range.start + "~" + range.end;
+        })
+        .join(", ");
+    }
+
+    function getUploadBlockedMessageClient() {
+      return "현재는 피드백 제출 가능 시간이 아닙니다.\n\n"
+        + "제출 가능 시간: " + getAllowedUploadTextClient() + "\n"
+        + "교육 이수 후 근무시간 내 제출해 주세요.";
+    }
 
     /*****************************************************************
      * 2) 소속 목록
@@ -651,7 +688,7 @@
 
     const I18N = {
       ko: {
-        title: "교육 이해도 확인",
+        title: "교육 이수 후 피드백",
         courseLabel: "교육과정",
         typeLabel: "구분",
         typeSelectLabel: "구분 선택",
@@ -663,8 +700,8 @@
         specialCourseLabel: "특별교육 과정을 선택해 주세요",
         specialCoursePlaceholder: "특별교육 과정을 선택하세요",
         specialCourseHint: "특별안전보건교육 QR에서만 표시됩니다.",
-        q1Label: "1. 오늘 교육은 이해하기 쉬웠습니까?",
-        q2Label: "2. 오늘 교육이 실제 작업에 도움이 되었습니까?",
+        q1Label: "1. 오늘 이수한 교육은 이해하기 쉬웠습니까?",
+        q2Label: "2. 오늘 이수한 교육이 실제 작업에 도움이 되었습니까?",
         score5: "매우 그렇다",
         score4: "그렇다",
         score3: "보통",
@@ -691,14 +728,14 @@
         error: "제출 중 오류가 발생했습니다. 다시 시도해 주세요.",
         setupError: "관리자 설정이 필요합니다. SCRIPT_URL을 입력해 주세요.",
         qrTypeError: "QR 주소에 직영/협력사 구분값이 없습니다. QR 코드를 다시 확인해 주세요.",
-        footer: "제출 전 입력 내용을 확인해 주세요.",
+        footer: "교육 이수 후 입력해 주세요.",
         direct: "직영",
         partner: "협력사",
         directOption: "직영",
         partnerOption: "협력사"
       },
       en: {
-        title: "Training Understanding Check",
+        title: "Post-Training Feedback",
         courseLabel: "Training Course",
         typeLabel: "Category",
         typeSelectLabel: "Select Category",
@@ -718,14 +755,14 @@
         success: "Submitted successfully.",
         error: "An error occurred while submitting. Please try again.",
         setupError: "Administrator setup is required. Please enter SCRIPT_URL.",
-        footer: "Please check your entries before submitting.",
+        footer: "Please submit this after completing the training.",
         direct: "Direct Employee",
         partner: "Partner Company",
         directOption: "Direct Employee",
         partnerOption: "Partner Company"
       },
       ne: {
-        title: "तालिम बुझाइ जाँच",
+        title: "तालिम पूरा गरेपछि प्रतिक्रिया",
         courseLabel: "तालिम कोर्स",
         typeLabel: "वर्ग",
         typeSelectLabel: "वर्ग चयन गर्नुहोस्",
@@ -745,14 +782,14 @@
         success: "पेश भयो।",
         error: "पेश गर्दा त्रुटि भयो। फेरि प्रयास गर्नुहोस्।",
         setupError: "व्यवस्थापक सेटिङ आवश्यक छ। कृपया SCRIPT_URL प्रविष्ट गर्नुहोस्।",
-        footer: "पेश गर्नु अघि प्रविष्ट गरिएको विवरण जाँच गर्नुहोस्।",
+        footer: "कृपया तालिम पूरा गरेपछि यो भर्नुहोस्।",
         direct: "प्रत्यक्ष कर्मचारी",
         partner: "सहयोगी कम्पनी",
         directOption: "प्रत्यक्ष कर्मचारी",
         partnerOption: "सहयोगी कम्पनी"
       },
       vi: {
-        title: "Xác nhận hiểu nội dung đào tạo",
+        title: "Phản hồi sau khi hoàn thành đào tạo",
         courseLabel: "Khóa đào tạo",
         typeLabel: "Phân loại",
         typeSelectLabel: "Chọn phân loại",
@@ -772,14 +809,14 @@
         success: "Đã gửi.",
         error: "Đã xảy ra lỗi khi gửi. Vui lòng thử lại.",
         setupError: "Cần thiết lập quản trị viên. Vui lòng nhập SCRIPT_URL.",
-        footer: "Vui lòng kiểm tra nội dung trước khi gửi.",
+        footer: "Vui lòng nhập sau khi hoàn thành đào tạo.",
         direct: "Nhân viên trực tiếp",
         partner: "Công ty đối tác",
         directOption: "Nhân viên trực tiếp",
         partnerOption: "Công ty đối tác"
       },
       tr: {
-        title: "Eğitim Anlama Kontrolü",
+        title: "Eğitim Sonrası Geri Bildirim",
         courseLabel: "Eğitim Kursu",
         typeLabel: "Kategori",
         typeSelectLabel: "Kategori Seçin",
@@ -799,14 +836,14 @@
         success: "Gönderildi.",
         error: "Gönderirken hata oluştu. Lütfen tekrar deneyin.",
         setupError: "Yönetici ayarı gereklidir. Lütfen SCRIPT_URL girin.",
-        footer: "Göndermeden önce bilgileri kontrol edin.",
+        footer: "Lütfen eğitimi tamamladıktan sonra doldurun.",
         direct: "Doğrudan Çalışan",
         partner: "Alt Yüklenici",
         directOption: "Doğrudan Çalışan",
         partnerOption: "Alt Yüklenici"
       },
       ru: {
-        title: "Проверка понимания обучения",
+        title: "Отзыв после прохождения обучения",
         courseLabel: "Курс обучения",
         typeLabel: "Категория",
         typeSelectLabel: "Выберите категорию",
@@ -826,14 +863,14 @@
         success: "Отправлено.",
         error: "Произошла ошибка при отправке. Попробуйте еще раз.",
         setupError: "Требуется настройка администратора. Введите SCRIPT_URL.",
-        footer: "Проверьте данные перед отправкой.",
+        footer: "Пожалуйста, заполните после прохождения обучения.",
         direct: "Штатный сотрудник",
         partner: "Партнерская компания",
         directOption: "Штатный сотрудник",
         partnerOption: "Партнерская компания"
       },
       fr: {
-        title: "Vérification de la compréhension",
+        title: "Retour après la formation",
         courseLabel: "Formation",
         typeLabel: "Catégorie",
         typeSelectLabel: "Sélectionner la catégorie",
@@ -853,14 +890,14 @@
         success: "Envoyé.",
         error: "Une erreur est survenue lors de l’envoi. Veuillez réessayer.",
         setupError: "Configuration administrateur requise. Veuillez saisir SCRIPT_URL.",
-        footer: "Veuillez vérifier vos informations avant l’envoi.",
+        footer: "Veuillez remplir après avoir suivi la formation.",
         direct: "Employé direct",
         partner: "Entreprise partenaire",
         directOption: "Employé direct",
         partnerOption: "Entreprise partenaire"
       },
       zh: {
-        title: "培训理解确认",
+        title: "培训完成后反馈",
         courseLabel: "培训课程",
         typeLabel: "分类",
         typeSelectLabel: "选择分类",
@@ -880,14 +917,14 @@
         success: "已提交。",
         error: "提交时发生错误。请重试。",
         setupError: "需要管理员设置。请输入 SCRIPT_URL。",
-        footer: "提交前请确认填写内容。",
+        footer: "请在完成培训后填写。",
         direct: "直营员工",
         partner: "合作公司",
         directOption: "直营员工",
         partnerOption: "合作公司"
       },
       th: {
-        title: "ตรวจสอบความเข้าใจการอบรม",
+        title: "ข้อเสนอแนะหลังการอบรม",
         courseLabel: "หลักสูตรอบรม",
         typeLabel: "ประเภท",
         typeSelectLabel: "เลือกประเภท",
@@ -907,14 +944,14 @@
         success: "ส่งแล้ว",
         error: "เกิดข้อผิดพลาดในการส่ง กรุณาลองอีกครั้ง",
         setupError: "ต้องตั้งค่าผู้ดูแลระบบ กรุณาใส่ SCRIPT_URL",
-        footer: "โปรดตรวจสอบข้อมูลก่อนส่ง",
+        footer: "กรุณากรอกหลังจากเข้ารับการอบรมแล้ว",
         direct: "พนักงานโดยตรง",
         partner: "บริษัทคู่ค้า",
         directOption: "พนักงานโดยตรง",
         partnerOption: "บริษัทคู่ค้า"
       },
       ar: {
-        title: "التحقق من فهم التدريب",
+        title: "ملاحظات بعد إكمال التدريب",
         courseLabel: "دورة التدريب",
         typeLabel: "الفئة",
         typeSelectLabel: "اختر الفئة",
@@ -934,14 +971,14 @@
         success: "تم الإرسال.",
         error: "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.",
         setupError: "يلزم إعداد المسؤول. الرجاء إدخال SCRIPT_URL.",
-        footer: "يرجى التحقق من البيانات قبل الإرسال.",
+        footer: "يرجى الإرسال بعد إكمال التدريب.",
         direct: "موظف مباشر",
         partner: "شركة شريكة",
         directOption: "موظف مباشر",
         partnerOption: "شركة شريكة"
       },
       uz: {
-        title: "O‘quvni tushunganlikni tasdiqlash",
+        title: "O‘quvdan keyingi fikr-mulohaza",
         courseLabel: "O‘quv kursi",
         typeLabel: "Toifa",
         typeSelectLabel: "Toifani tanlang",
@@ -961,7 +998,7 @@
         success: "Yuborildi.",
         error: "Yuborishda xatolik yuz berdi. Qayta urinib ko‘ring.",
         setupError: "Administrator sozlamasi kerak. SCRIPT_URL kiriting.",
-        footer: "Yuborishdan oldin ma’lumotlarni tekshiring.",
+        footer: "Iltimos, o‘quvni tugatgandan keyin to‘ldiring.",
         direct: "To‘g‘ridan-to‘g‘ri xodim",
         partner: "Hamkor kompaniya",
         directOption: "To‘g‘ridan-to‘g‘ri xodim",
@@ -974,8 +1011,8 @@
         specialCourseLabel: "특별교육 과정을 선택해 주세요",
         specialCoursePlaceholder: "특별교육 과정을 선택하세요",
         specialCourseHint: "특별안전보건교육 QR에서만 표시됩니다.",
-        q1Label: "1. 오늘 교육은 이해하기 쉬웠습니까?",
-        q2Label: "2. 오늘 교육이 실제 작업에 도움이 되었습니까?",
+        q1Label: "1. 오늘 이수한 교육은 이해하기 쉬웠습니까?",
+        q2Label: "2. 오늘 이수한 교육이 실제 작업에 도움이 되었습니까?",
         scoreLow: "전혀 아니다",
         scoreHigh: "매우 그렇다",
         improvementLabel: "3. 개선이 필요한 부분이 있습니까? ※ 복수 선택 가능",
@@ -987,8 +1024,8 @@
         specialCourseLabel: "Select the special training course",
         specialCoursePlaceholder: "Select the special training course",
         specialCourseHint: "This appears only for the Special Safety Training QR.",
-        q1Label: "1. Was today's training easy to understand?",
-        q2Label: "2. Was today's training helpful for your actual work?",
+        q1Label: "1. Was the training you completed today easy to understand?",
+        q2Label: "2. Was the training you completed today helpful for your actual work?",
         scoreLow: "Strongly disagree",
         scoreHigh: "Strongly agree",
         improvementLabel: "3. What needs improvement? ※ Multiple selections allowed",
@@ -1000,8 +1037,8 @@
         specialCourseLabel: "विशेष तालिम कोर्स चयन गर्नुहोस्",
         specialCoursePlaceholder: "विशेष तालिम कोर्स चयन गर्नुहोस्",
         specialCourseHint: "यो विशेष सुरक्षा तालिम QR मा मात्र देखिन्छ।",
-        q1Label: "1. आजको तालिम बुझ्न सजिलो थियो?",
-        q2Label: "2. आजको तालिम वास्तविक काममा उपयोगी भयो?",
+        q1Label: "1. आज तपाईंले पूरा गरेको तालिम बुझ्न सजिलो थियो?",
+        q2Label: "2. आज तपाईंले पूरा गरेको तालिम वास्तविक काममा उपयोगी भयो?",
         scoreLow: "बिल्कुल सहमत छैन",
         scoreHigh: "पूर्ण रूपमा सहमत",
         improvementLabel: "3. सुधार आवश्यक भाग के छ? ※ धेरै चयन गर्न सकिन्छ",
@@ -1013,8 +1050,8 @@
         specialCourseLabel: "Chọn khóa đào tạo đặc biệt",
         specialCoursePlaceholder: "Chọn khóa đào tạo đặc biệt",
         specialCourseHint: "Chỉ hiển thị trong QR Đào tạo an toàn đặc biệt.",
-        q1Label: "1. Nội dung đào tạo hôm nay có dễ hiểu không?",
-        q2Label: "2. Đào tạo hôm nay có hữu ích cho công việc thực tế không?",
+        q1Label: "1. Khóa đào tạo bạn đã hoàn thành hôm nay có dễ hiểu không?",
+        q2Label: "2. Khóa đào tạo bạn đã hoàn thành hôm nay có hữu ích cho công việc thực tế không?",
         scoreLow: "Hoàn toàn không đồng ý",
         scoreHigh: "Hoàn toàn đồng ý",
         improvementLabel: "3. Phần nào cần cải thiện? ※ Có thể chọn nhiều mục",
@@ -1026,8 +1063,8 @@
         specialCourseLabel: "Özel eğitim kursunu seçin",
         specialCoursePlaceholder: "Özel eğitim kursunu seçin",
         specialCourseHint: "Yalnızca Özel Güvenlik Eğitimi QR'ında gösterilir.",
-        q1Label: "1. Bugünkü eğitimi anlamak kolay mıydı?",
-        q2Label: "2. Bugünkü eğitim gerçek işiniz için faydalı oldu mu?",
+        q1Label: "1. Bugün tamamladığınız eğitimi anlamak kolay mıydı?",
+        q2Label: "2. Bugün tamamladığınız eğitim gerçek işiniz için faydalı oldu mu?",
         scoreLow: "Kesinlikle katılmıyorum",
         scoreHigh: "Kesinlikle katılıyorum",
         improvementLabel: "3. Hangi bölüm iyileştirilmeli? ※ Birden fazla seçim yapılabilir",
@@ -1039,8 +1076,8 @@
         specialCourseLabel: "Выберите специальный курс обучения",
         specialCoursePlaceholder: "Выберите специальный курс обучения",
         specialCourseHint: "Отображается только для QR специального обучения по безопасности.",
-        q1Label: "1. Было ли сегодняшнее обучение понятным?",
-        q2Label: "2. Было ли сегодняшнее обучение полезным для фактической работы?",
+        q1Label: "1. Было ли обучение, которое вы сегодня прошли, понятным?",
+        q2Label: "2. Было ли обучение, которое вы сегодня прошли, полезным для фактической работы?",
         scoreLow: "Совершенно не согласен",
         scoreHigh: "Полностью согласен",
         improvementLabel: "3. Что нужно улучшить? ※ Можно выбрать несколько вариантов",
@@ -1052,8 +1089,8 @@
         specialCourseLabel: "Sélectionnez la formation spéciale",
         specialCoursePlaceholder: "Sélectionnez la formation spéciale",
         specialCourseHint: "Affiché uniquement pour le QR de formation spéciale à la sécurité.",
-        q1Label: "1. La formation d'aujourd'hui était-elle facile à comprendre ?",
-        q2Label: "2. La formation d'aujourd'hui a-t-elle été utile pour le travail réel ?",
+        q1Label: "1. La formation que vous avez suivie aujourd’hui était-elle facile à comprendre ?",
+        q2Label: "2. La formation que vous avez suivie aujourd’hui a-t-elle été utile pour votre travail réel ?",
         scoreLow: "Pas du tout d'accord",
         scoreHigh: "Tout à fait d'accord",
         improvementLabel: "3. Que faut-il améliorer ? ※ Choix multiples possibles",
@@ -1065,8 +1102,8 @@
         specialCourseLabel: "请选择特别教育课程",
         specialCoursePlaceholder: "请选择特别教育课程",
         specialCourseHint: "仅在特别安全教育二维码中显示。",
-        q1Label: "1. 今天的教育内容容易理解吗？",
-        q2Label: "2. 今天的教育对实际工作有帮助吗？",
+        q1Label: "1. 您今天完成的培训内容容易理解吗？",
+        q2Label: "2. 您今天完成的培训对实际工作有帮助吗？",
         scoreLow: "完全不同意",
         scoreHigh: "非常同意",
         improvementLabel: "3. 哪些部分需要改善？※ 可多选",
@@ -1078,8 +1115,8 @@
         specialCourseLabel: "เลือกหลักสูตรอบรมพิเศษ",
         specialCoursePlaceholder: "เลือกหลักสูตรอบรมพิเศษ",
         specialCourseHint: "แสดงเฉพาะ QR การอบรมความปลอดภัยพิเศษเท่านั้น",
-        q1Label: "1. การอบรมวันนี้เข้าใจง่ายหรือไม่?",
-        q2Label: "2. การอบรมวันนี้มีประโยชน์ต่อการทำงานจริงหรือไม่?",
+        q1Label: "1. การอบรมที่คุณเข้าร่วมในวันนี้เข้าใจง่ายหรือไม่?",
+        q2Label: "2. การอบรมที่คุณเข้าร่วมในวันนี้มีประโยชน์ต่อการทำงานจริงหรือไม่?",
         scoreLow: "ไม่เห็นด้วยอย่างยิ่ง",
         scoreHigh: "เห็นด้วยอย่างยิ่ง",
         improvementLabel: "3. ส่วนใดควรปรับปรุง? ※ เลือกได้หลายข้อ",
@@ -1091,8 +1128,8 @@
         specialCourseLabel: "اختر دورة التدريب الخاصة",
         specialCoursePlaceholder: "اختر دورة التدريب الخاصة",
         specialCourseHint: "يظهر فقط في رمز QR الخاص بتدريب السلامة الخاص.",
-        q1Label: "1. هل كان تدريب اليوم سهل الفهم؟",
-        q2Label: "2. هل كان تدريب اليوم مفيدًا للعمل الفعلي؟",
+        q1Label: "1. هل كان التدريب الذي أكملته اليوم سهل الفهم؟",
+        q2Label: "2. هل كان التدريب الذي أكملته اليوم مفيدًا للعمل الفعلي؟",
         scoreLow: "لا أوافق بشدة",
         scoreHigh: "أوافق بشدة",
         improvementLabel: "3. ما الذي يحتاج إلى تحسين؟ ※ يمكن اختيار أكثر من خيار",
@@ -1104,8 +1141,8 @@
         specialCourseLabel: "Maxsus o‘quv kursini tanlang",
         specialCoursePlaceholder: "Maxsus o‘quv kursini tanlang",
         specialCourseHint: "Faqat maxsus xavfsizlik o‘quvi QR kodida ko‘rsatiladi.",
-        q1Label: "1. Bugungi o‘quvni tushunish oson bo‘ldimi?",
-        q2Label: "2. Bugungi o‘quv amaliy ishingizga foydali bo‘ldimi?",
+        q1Label: "1. Bugun tugatgan o‘quvingizni tushunish oson bo‘ldimi?",
+        q2Label: "2. Bugun tugatgan o‘quvingiz amaliy ishingizga foydali bo‘ldimi?",
         scoreLow: "Umuman rozi emasman",
         scoreHigh: "To‘liq roziman",
         improvementLabel: "3. Qaysi qism yaxshilanishi kerak? ※ Bir nechta tanlash mumkin",
@@ -1357,6 +1394,11 @@
       event.preventDefault();
       clearMessage();
 
+      if (!isUploadAllowedNowClient()) {
+        showMessage("err", getUploadBlockedMessageClient());
+        return;
+      }
+
       if (!SCRIPT_URL || SCRIPT_URL.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
         showMessage("err", getT("setupError"));
         return;
@@ -1388,9 +1430,9 @@
         affiliation: getOrgLabel(el.affiliation.value),
         affiliationBase: el.affiliation.value,
         q1Score: q1Score,
-        q1Text: "오늘 교육은 이해하기 쉬웠습니까?",
+        q1Text: "오늘 이수한 교육은 이해하기 쉬웠습니까?",
         q2Score: q2Score,
-        q2Text: "오늘 교육이 실제 작업에 도움이 되었습니까?",
+        q2Text: "오늘 이수한 교육이 실제 작업에 도움이 되었습니까?",
         improvement: improvements.length ? improvements.join(", ") : "-",
         comment: el.comment.value.trim() || "-",
         pageUrl: location.href,
